@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:old_trustworthy/views/login_page.dart';
+import 'package:old_trustworthy/views/account_page.dart';
+import 'package:old_trustworthy/views/address_page.dart';
+// import 'package:old_trustworthy/views/administration_page.dart';
+import 'package:old_trustworthy/views/product_loading_form.dart';
+// import 'package:old_trustworthy/views/login_page.dart';
 
-class DrawerLeftBar extends StatelessWidget {
+class DrawerLeftBar extends StatefulWidget {
+  @override
+  _DrawerLeftBarState createState() => _DrawerLeftBarState();
+}
+
+class _DrawerLeftBarState extends State<DrawerLeftBar> {
+  // bool _loggenIn = false; //estado para saber si esta logueado o no
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -11,7 +22,7 @@ class DrawerLeftBar extends StatelessWidget {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: Color.fromRGBO(137, 172, 18, 1.0),
             ),
             child: Stack(
               children: <Widget>[
@@ -45,7 +56,12 @@ class DrawerLeftBar extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.location_on),
             title: Text('Mis direcciones'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => MyAddressPage()),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.receipt),
@@ -61,12 +77,29 @@ class DrawerLeftBar extends StatelessWidget {
               //   context,
               //   MaterialPageRoute(builder: (context) => MyLoginPage()),
               // );
+              // if (_loggenIn) {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (BuildContext context) => MyLoginPage()),
+                    builder: (BuildContext context) => MyAccountPage()),
+              );
+              // } else {
+              //   Navigator.of(context).push(
+              //     MaterialPageRoute(
+              //         builder: (BuildContext context) => MyLoginPage()),
+              //   );
+              // }
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('ADMINISTRADOR'),
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => ProductLoadingForm()),
               );
             },
-          )
+          ),
         ],
       ),
     );
