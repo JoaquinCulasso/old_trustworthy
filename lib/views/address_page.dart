@@ -62,12 +62,12 @@ class _MyAddressPageState extends State<MyAddressPage> {
                   Container(
                     margin: EdgeInsets.all(20),
                     decoration: BoxDecoration(
-                      color: Colors.green,
+                      color: Color.fromRGBO(47, 87, 44, 1.0),
                     ),
                     child: MaterialButton(
                       child: Text(
                         'Continuar',
-                        style: TextStyle(color: Colors.white, fontSize: 25.0),
+                        style: TextStyle(fontSize: 25.0, color: Colors.white),
                       ),
                       onPressed: () {},
                     ),

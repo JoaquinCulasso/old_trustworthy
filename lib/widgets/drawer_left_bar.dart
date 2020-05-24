@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
-// import 'package:old_trustworthy/views/administration_page.dart';
-import 'package:old_trustworthy/views/product_loading_form.dart';
-// import 'package:old_trustworthy/views/login_page.dart';
+import 'package:old_trustworthy/views/administration_page.dart';
 
 class DrawerLeftBar extends StatefulWidget {
   @override
@@ -22,7 +20,7 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
         children: <Widget>[
           DrawerHeader(
             decoration: BoxDecoration(
-              color: Color.fromRGBO(137, 172, 18, 1.0),
+              color: Color.fromRGBO(47, 87, 44, 1.0),
             ),
             child: Stack(
               children: <Widget>[
@@ -96,7 +94,7 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
-                    builder: (BuildContext context) => ProductLoadingForm()),
+                    builder: (BuildContext context) => MyAdministrationPage()),
               );
             },
           ),

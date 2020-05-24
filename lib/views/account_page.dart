@@ -15,8 +15,11 @@ class _MyAccountPageState extends State<MyAccountPage> {
       body: ListView(
         children: <Widget>[
           header(),
+          Divider(color: Colors.white, height: 50.0, thickness: 5.0),
           myData(),
+          Divider(color: Colors.white, height: 50.0, thickness: 5.0),
           settings(),
+          Divider(color: Colors.white, height: 50.0, thickness: 5.0),
           loginAccount(),
         ],
       ),
@@ -107,7 +110,7 @@ class _MyAccountPageState extends State<MyAccountPage> {
     return Container(
       margin: EdgeInsets.only(bottom: 20, left: 30, right: 30),
       decoration: BoxDecoration(
-        color: Colors.green,
+        color: Color.fromRGBO(47, 87, 44, 1.0),
       ),
       child: MaterialButton(
         child: Text(

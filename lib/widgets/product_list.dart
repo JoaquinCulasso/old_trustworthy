@@ -43,7 +43,8 @@ class _ProductListState extends State<ProductList> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 175.0,
+      height: 150.0,
+      // color: Colors.white,
       //color: Colors.greenAccent, // para ver el container
       child: productList.length == 0
           ? Center(child: CircularProgressIndicator())
@@ -58,16 +59,6 @@ class _ProductListState extends State<ProductList> {
                     productList[index].price,
                     productList[index].unit);
               },
-              // children: <Widget>[
-              //   _item(AssetImage('assets/products/manzana.jpg'), 'MANZANA',
-              //       'VERDURAS', 60.56, 'KG'),
-              //   _item(AssetImage('assets/products/zanahoria.jpg'), 'ZANAHORIA',
-              //       'VERDURAS', 35, 'KG'),
-              //   _item(AssetImage('assets/products/limon.jpg'), 'LIMON', 'VERDURAS',
-              //       20.30, 'KG'),
-              //   _item(AssetImage('assets/products/uva.jpg'), 'UVA', 'VERDURAS', 60.56,
-              //       'KG'),
-              // ],
             ),
     );
   }
@@ -76,37 +67,44 @@ class _ProductListState extends State<ProductList> {
 Widget _item(
     String image, String name, String label, String price, String unit) {
   return Container(
-    width: 175.0,
-    decoration: BoxDecoration(
-      border: Border.all(color: Colors.black, width: 3),
-      borderRadius: BorderRadius.circular(20),
-      image: DecorationImage(
-        image: NetworkImage(image),
-        fit: BoxFit.contain,
-        alignment: Alignment.topCenter,
+    padding: EdgeInsets.symmetric(horizontal: 5.0),
+    child: Container(
+      width: 150.0,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: Colors.black, width: 3),
+        borderRadius: BorderRadius.circular(20),
+        image: DecorationImage(
+          image: NetworkImage(image),
+          fit: BoxFit.contain,
+          alignment: Alignment.center,
+        ),
       ),
-      //image, fit: BoxFit.contain, alignment: Alignment.topCenter),
-    ),
-    child: Column(
-      children: <Widget>[
-        // Image.network(
-        //   image,
-        //   fit: BoxFit.cover,
-        // ),
-        Padding(
-          padding: EdgeInsets.only(top: 130),
-          child: Text(
-            name,
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+      child: MaterialButton(
+        padding: EdgeInsets.all(0),
+        splashColor: Color.fromRGBO(25, 68, 11, 0.7),
+        onPressed: () {}, //TODO agregar funcionalidad al presion item
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Text(
+              name,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
+            Text(
+              price + ' x ' + unit,
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
-        Text(
-          price + ' x ' + unit,
-        ),
-      ],
+      ),
     ),
   );
 }

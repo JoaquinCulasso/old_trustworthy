@@ -6,14 +6,14 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:old_trustworthy/views/home_page.dart';
 
-class ProductLoadingForm extends StatefulWidget {
+class ProductLoadingFormPage extends StatefulWidget {
   @override
-  _ProductLoadingFormState createState() => _ProductLoadingFormState();
+  _ProductLoadingFormPageState createState() => _ProductLoadingFormPageState();
 }
 
-class _ProductLoadingFormState extends State<ProductLoadingForm> {
+class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   File productImage;
-  String _name; 
+  String _name;
   String _price;
   String _unit;
   String _label;
@@ -29,7 +29,9 @@ class _ProductLoadingFormState extends State<ProductLoadingForm> {
         centerTitle: true,
       ),
       body: Center(
-        child: productImage == null ? Text("Selecciona una imagen del telefono") : enableUpload(),
+        child: productImage == null
+            ? Text("Selecciona una imagen del telefono")
+            : enableUpload(),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
@@ -106,7 +108,7 @@ class _ProductLoadingFormState extends State<ProductLoadingForm> {
                 elevation: 10.0,
                 child: Text("Agregar Producto"),
                 textColor: Colors.white,
-                color: Colors.green,
+                color: Color.fromRGBO(47, 87, 44, 1.0),
                 onPressed: uploadStatusImage,
               )
             ],
@@ -174,14 +176,14 @@ class _ProductLoadingFormState extends State<ProductLoadingForm> {
 }
 
 // import 'package:flutter/material.dart';
-// import 'package:old_trustworthy/views/ProductLoadingForm.dart';
+// import 'package:old_trustworthy/views/ProductLoadingFormPage.dart';
 
-// class ProductLoadingForm extends StatefulWidget {
+// class ProductLoadingFormPage extends StatefulWidget {
 //   @override
-//   _ProductLoadingFormState createState() => _ProductLoadingFormState();
+//   _ProductLoadingFormPageState createState() => _ProductLoadingFormPageState();
 // }
 
-// class _ProductLoadingFormState extends State<ProductLoadingForm> {
+// class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
 //   @override
 //   Widget build(BuildContext context) {
 //     return Scaffold(
@@ -237,7 +239,7 @@ class _ProductLoadingFormState extends State<ProductLoadingForm> {
 //                             context,
 //                             MaterialPageRoute(
 //                               builder: (context) {
-//                                 return ProductLoadingForm();
+//                                 return ProductLoadingFormPage();
 //                               },
 //                             ),
 //                           );

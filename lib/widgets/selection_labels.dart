@@ -39,7 +39,6 @@ class _SelectionLabelsState extends State<SelectionLabels> {
 Widget _bottonAction(IconData icon, Function callback) {
   return InkWell(
     borderRadius: BorderRadius.circular(25),
-    splashColor: Colors.greenAccent,
     child: Padding(
       padding: EdgeInsets.all(15.0),
       child: Icon(icon),

@@ -15,7 +15,7 @@ class ProductTitle extends StatelessWidget {
             title,
             style: TextStyle(
               fontSize: 25.0,
-              color: Color.fromRGBO(137, 172, 18, 1.0),
+              color: Color.fromRGBO(47, 87, 44, 1.0),
               fontWeight: FontWeight.bold,
             ),
           ),
