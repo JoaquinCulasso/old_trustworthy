@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
 import 'package:old_trustworthy/views/administration_page.dart';
+import 'package:old_trustworthy/views/home_page.dart';
 
 class DrawerLeftBar extends StatefulWidget {
   @override
@@ -49,7 +50,12 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
           ListTile(
             leading: Icon(Icons.home),
             title: Text('Inicio'),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                    builder: (BuildContext context) => MyHomePage()),
+              );
+            },
           ),
           ListTile(
             leading: Icon(Icons.location_on),
