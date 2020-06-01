@@ -1,53 +1,35 @@
 class Product {
+  String _name, _price, _label, _unit, _image;
 
-  String name, price, label, unit, image;
+  Product(this._name, this._price, this._label, this._unit, this._image);
 
-    Product(this.name, this.price, this.label, this.unit, this.image);
-    
-  // int _id;
-  // String _name;
-  // String _label;
-  // double _price;
-  // String _image;
+  //SETTERS
 
-  // //CONSTRUCTOR
-  // Product(this._id, this._name, this._label, this._price, this._image);
+  set name(String name) {
+    this._name = name;
+  }
 
-  // //SETTERS
-  // set id(int id) {
-  //   this._id = id;
-  // }
+  set price(String price) {
+    this._price = price;
+  }
 
-  // set name(String name) {
-  //   this._name = name;
-  // }
+  set label(String label) {
+    this._label = label;
+  }
 
-  // set label(String label) {
-  //   this._label = label;
-  // }
+  set unit(String unit) {
+    this._unit = unit;
+  }
 
-  // set price(double price) {
-  //   this._price = price;
-  // }
+  set image(String image) {
+    this._image = image;
+  }
 
-  // set image(String image) {
-  //   this._image = image;
-  // }
+  //GETTERS
 
-  // //GETTERS
-  // int get id => this._id;
-  // String get name => this._name;
-  // String get label => this._label;
-  // double get price => this._price;
-  // String get image => this._image;
-
-  // Map<String, dynamic> toMap() {
-  //   return {
-  //     'id': _id,
-  //     'name': _name,
-  //     'label': _label,
-  //     'price': _price,
-  //     'image': _image
-  //   };
-  // }
+  String get name => this._name;
+  String get price => this._price;
+  String get label => this._label;
+  String get unit => this._unit;
+  String get image => this._image;
 }
