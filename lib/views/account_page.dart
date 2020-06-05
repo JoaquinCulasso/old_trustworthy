@@ -12,16 +12,26 @@ class _MyAccountPageState extends State<MyAccountPage> {
       appBar: AppBar(
         title: Text('Mi cuenta'),
       ),
-      body: ListView(
-        children: <Widget>[
-          header(),
-          Divider(color: Colors.white, height: 50.0, thickness: 5.0),
-          myData(),
-          Divider(color: Colors.white, height: 50.0, thickness: 5.0),
-          settings(),
-          Divider(color: Colors.white, height: 50.0, thickness: 5.0),
-          loginAccount(),
-        ],
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/vieja_confiable.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: ListView(
+            children: <Widget>[
+              header(),
+              Divider(color: Colors.white, height: 50.0, thickness: 5.0),
+              myData(),
+              Divider(color: Colors.white, height: 50.0, thickness: 5.0),
+              settings(),
+              Divider(color: Colors.white, height: 50.0, thickness: 5.0),
+              loginAccount(),
+            ],
+          ),
+        ),
       ),
     );
   }

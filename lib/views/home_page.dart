@@ -6,13 +6,7 @@ import 'package:old_trustworthy/widgets/product_list.dart';
 import 'package:old_trustworthy/widgets/product_title.dart';
 import 'package:old_trustworthy/widgets/selection_labels.dart';
 
-class MyHomePage extends StatefulWidget {
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
+class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -27,7 +21,7 @@ class _MyHomePageState extends State<MyHomePage> {
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage('assets/images/vieja_confiable.png'),
-              fit: BoxFit.fill,
+              fit: BoxFit.cover,
             ),
           ),
           child: SingleChildScrollView(

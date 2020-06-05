@@ -28,10 +28,20 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
         title: Text("Cargar producto"),
         centerTitle: true,
       ),
-      body: Center(
-        child: productImage == null
-            ? Text("Selecciona una imagen del telefono")
-            : enableUpload(),
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/vieja_confiable.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Center(
+            child: productImage == null
+                ? Text("Selecciona una imagen del telefono")
+                : enableUpload(),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,

@@ -15,16 +15,24 @@ class _MyAdministrationPageState extends State<MyAdministrationPage> {
       appBar: AppBar(
         title: Text('Administración'),
       ),
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: <Widget>[
-            _buttom('Agregar Producto', context, ProductLoadingFormPage()),
-            _buttom('Modificar o eliminar Producto', context,
-                ModifyDeleteProductPage()),
-            _buttom('Mensaje masivo', context, MassiveMessagePage()),
-          ],
+      body: SafeArea(
+        child: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/vieja_confiable.png'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              _buttom('Agregar Producto', context, ProductLoadingFormPage()),
+              _buttom('Modificar o eliminar Producto', context,
+                  ModifyDeleteProductPage()),
+              _buttom('Mensaje masivo', context, MassiveMessagePage()),
+            ],
+          ),
         ),
       ),
     );
