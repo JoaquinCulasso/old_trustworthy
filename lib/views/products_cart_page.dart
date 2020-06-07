@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:old_trustworthy/models/product.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
+import 'package:old_trustworthy/widgets/send_cart_order.dart';
 import 'package:provider/provider.dart';
 
 class MyProductsCartPage extends StatelessWidget {
@@ -10,25 +11,40 @@ class MyProductsCartPage extends StatelessWidget {
         Provider.of<ShoppingCartProvider>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text('Carrito de productos a comprar'),
-        ),
-        body: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/images/vieja_confiable.png'),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: ListView.builder(
-              itemCount: shoppingCart.getCart.length,
-              itemBuilder: (BuildContext context, int index) {
-                return _itemProduct(shoppingCart.getCart[index]);
-              },
+      appBar: AppBar(
+        title: Text('Carrito de productos a comprar'),
+      ),
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/images/vieja_confiable.png'),
+              fit: BoxFit.cover,
             ),
           ),
-        ));
+          child: shoppingCart.getCart.length == 0
+              ? Center(
+                  child: Padding(
+                  padding: const EdgeInsets.all(1.0),
+                  child: Text(
+                    'Selecciona algunos productos para comenzar tu compra!!',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ))
+              : ListView.builder(
+                  itemCount: shoppingCart.getCart.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _itemProduct(shoppingCart.getCart[index]);
+                  },
+                ),
+        ),
+      ),
+      bottomNavigationBar: SendCartOrder(),
+    );
   }
 
   Widget _itemProduct(Product product) {
@@ -69,6 +85,7 @@ class MyProductsCartPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.black, width: 3),
                   borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
                   image: DecorationImage(
                     image: NetworkImage(product.image),
                     fit: BoxFit.contain,
