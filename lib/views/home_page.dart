@@ -32,28 +32,28 @@ class MyHomePage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   SelectionLabels(),
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Verduras'),
-                  ProductList(), //Verduras
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Verdura'), //Verduras
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Frutas'),
-                  ProductList(), //Frutas
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Fruta'), //Frutas
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Carnes'),
-                  ProductList(), //Carnes
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Carne'), //Carnes
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Congelados'),
-                  ProductList(), //Congelados
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Congelados'), //Congelados
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Higiene personal'),
-                  ProductList(), //Higiene personal
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Higiene personal'), //Higiene personal
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Limpieza'),
-                  ProductList(), //Limpieza
-                  Divider(color: Colors.black, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Limpieza'), //Limpieza
+                  Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Fiambres'),
-                  ProductList(), //Fiambres
-                  Divider(color: Colors.white, thickness: 5.0, height: 50.0),
+                  ProductList(label: 'Fiambre'), //Fiambres
+                  Divider(color: Colors.white, thickness: 5.0, height: 0.0),
                 ],
               ),
             ),

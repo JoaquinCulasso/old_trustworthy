@@ -2,30 +2,30 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 import 'package:old_trustworthy/models/product.dart';
-// import 'package:old_trustworthy/streams/product_cart_list_stream.dart';
-import 'package:old_trustworthy/streams/sum_prices_stream.dart';
+import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductList extends StatefulWidget {
+  final String label;
+
+  ProductList({Key key, this.label}) : super(key: key);
   @override
   _ProductListState createState() => _ProductListState();
 }
 
 class _ProductListState extends State<ProductList> {
   List<Product> productList = [];
-  SumPricesStream streamPrices; // = SumPricesStream.instance;
-  // ProductCartListStream streamCartProduct;// = ProductCartListStream.instance;
 
   @override
   void initState() {
     super.initState();
 
-    streamPrices = SumPricesStream.instance;
-    // streamCartProduct = ProductCartListStream.instance;
-    streamPrices.resetCount();
-
     DatabaseReference productRef =
         FirebaseDatabase.instance.reference().child('Vieja_Confiable');
-    productRef.once().then((DataSnapshot snapshot) {
+
+    Query filterQuery = productRef.orderByChild('label').equalTo(widget.label);
+
+    filterQuery.once().then((DataSnapshot snapshot) {
       var keys = snapshot.value.keys;
       var data = snapshot.value;
 
@@ -49,18 +49,9 @@ class _ProductListState extends State<ProductList> {
   }
 
   @override
-  void dispose() {
-    streamPrices.close();
-    super.dispose();
-    // streamPrices.close();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Container(
       height: 150.0,
-      // color: Colors.white,
-      //color: Colors.greenAccent, // para ver el container
       child: productList.length == 0
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -72,42 +63,104 @@ class _ProductListState extends State<ProductList> {
                     productList[index].name,
                     productList[index].label,
                     productList[index].price,
-                    productList[index].unit);
+                    productList[index].unit,
+                    context);
               },
             ),
     );
   }
 
-  Widget _item(
-      String _image, String _name, String _label, String _price, String _unit) {
+  // Widget _item(String _image, String _name, String _label, String _price,
+  //     String _unit, BuildContext context) {
+  //   final shoppingCart = Provider.of<ShoppingCartProvider>(context);
+
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(horizontal: 5.0),
+  //     child: Container(
+  //       width: 120.0,
+  //       decoration: BoxDecoration(
+  //         color: Colors.white,
+  //         border: Border.all(color: Colors.black, width: 3),
+  //         borderRadius: BorderRadius.circular(20),
+  //         image: DecorationImage(
+  //           image: NetworkImage(_image),
+  //           fit: BoxFit.contain,
+  //           alignment: Alignment.center,
+  //         ),
+  //       ),
+  //       child: MaterialButton(
+  //         padding: EdgeInsets.all(0),
+  //         splashColor: Color.fromRGBO(25, 68, 11, 0.7),
+  //         onPressed: () {
+  //           shoppingCart.sumCounter(_price);
+  //           shoppingCart.addCart(Product(_name, _price, _label, _unit, _image));
+  //         },
+  //         child: Column(
+  //           crossAxisAlignment: CrossAxisAlignment.center,
+  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //           children: <Widget>[
+  //             Text(
+  //               _name,
+  //               textAlign: TextAlign.center,
+  //               style: TextStyle(
+  //                 fontSize: 20,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //             Text(
+  //               '\$$_price x $_unit',
+  //               textAlign: TextAlign.center,
+  //               style: TextStyle(
+  //                 fontSize: 20.0,
+  //                 fontWeight: FontWeight.bold,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
+
+  Widget _item(String _image, String _name, String _label, String _price,
+      String _unit, BuildContext context) {
+    final shoppingCart = Provider.of<ShoppingCartProvider>(context);
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.0),
-      child: Container(
-        width: 150.0,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.black, width: 3),
-          borderRadius: BorderRadius.circular(20),
-          image: DecorationImage(
-            image: NetworkImage(_image),
-            fit: BoxFit.contain,
-            alignment: Alignment.center,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+          MaterialButton(
+            padding: EdgeInsets.all(0),
+            splashColor: Colors.red, // Color.fromRGBO(25, 68, 11, 0.7),
+            onPressed: () {
+              shoppingCart.sumCounter(_price);
+              shoppingCart
+                  .addCart(Product(_name, _price, _label, _unit, _image));
+            },
+            child: Container(
+              height: 90.0,
+              width: 90.0,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.black, width: 3),
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: NetworkImage(_image),
+                  fit: BoxFit.contain,
+                  alignment: Alignment.center,
+                ),
+              ),
+            ),
           ),
-        ),
-        child: MaterialButton(
-          padding: EdgeInsets.all(0),
-          splashColor: Color.fromRGBO(25, 68, 11, 0.7),
-          onPressed: () {
-            streamPrices.incrementCount(_price);
-            // streamCartProduct
-            //     .addProduct(Product(_name, _price, _label, _unit, _image));
-          },
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Column(
             children: <Widget>[
               Text(
                 _name,
+                textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -116,14 +169,133 @@ class _ProductListState extends State<ProductList> {
               Text(
                 '\$$_price x $_unit',
                 style: TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 17.5,
+                  // fontWeight: FontWeight.bold,
                 ),
               ),
             ],
           ),
-        ),
+        ],
       ),
+      // ),
     );
   }
 }
+
+// class ProductList extends StatefulWidget {
+//   @override
+//   _ProductListState createState() => _ProductListState();
+// }
+
+// class _ProductListState extends State<ProductList> {
+//   List<Product> productList = [];
+//   ShoppingCartStream streamShoppingCart;
+
+//   @override
+//   void initState() {
+//     super.initState();
+
+//     streamShoppingCart = ShoppingCartStream.instance;
+//     streamShoppingCart.resetCount();
+
+//     DatabaseReference productRef =
+//         FirebaseDatabase.instance.reference().child('Vieja_Confiable');
+//     productRef.once().then((DataSnapshot snapshot) {
+//       var keys = snapshot.value.keys;
+//       var data = snapshot.value;
+
+//       productList.clear();
+
+//       for (var individualKey in keys) {
+//         Product products = Product(
+//             data[individualKey]['name'],
+//             data[individualKey]['price'],
+//             data[individualKey]['label'],
+//             data[individualKey]['unit'],
+//             data[individualKey]['image']);
+
+//         productList.add(products);
+//       }
+
+//       setState(() {
+//         print('Length: $productList.length');
+//       });
+//     });
+//   }
+
+//   @override
+//   void dispose() {
+//     streamShoppingCart.close();
+//     super.dispose();
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return Container(
+//       height: 150.0,
+//       child: productList.length == 0
+//           ? Center(child: CircularProgressIndicator())
+//           : ListView.builder(
+//               itemCount: productList.length,
+//               scrollDirection: Axis.horizontal,
+//               itemBuilder: (_, index) {
+//                 return _item(
+//                     productList[index].image,
+//                     productList[index].name,
+//                     productList[index].label,
+//                     productList[index].price,
+//                     productList[index].unit);
+//               },
+//             ),
+//     );
+//   }
+
+//   Widget _item(
+//       String _image, String _name, String _label, String _price, String _unit) {
+//     return Container(
+//       padding: EdgeInsets.symmetric(horizontal: 5.0),
+//       child: Container(
+//         width: 150.0,
+//         decoration: BoxDecoration(
+//           color: Colors.white,
+//           border: Border.all(color: Colors.black, width: 3),
+//           borderRadius: BorderRadius.circular(20),
+//           image: DecorationImage(
+//             image: NetworkImage(_image),
+//             fit: BoxFit.contain,
+//             alignment: Alignment.center,
+//           ),
+//         ),
+//         child: MaterialButton(
+//           padding: EdgeInsets.all(0),
+//           splashColor: Color.fromRGBO(25, 68, 11, 0.7),
+//           onPressed: () {
+//             streamShoppingCart.incrementCounter(_price);
+//             // streamShoppingCart
+//             //     .addProduct(Product(_name, _price, _label, _unit, _image));
+//           },
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//             children: <Widget>[
+//               Text(
+//                 _name,
+//                 style: TextStyle(
+//                   fontSize: 20,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//               Text(
+//                 '\$$_price x $_unit',
+//                 style: TextStyle(
+//                   fontSize: 20.0,
+//                   fontWeight: FontWeight.bold,
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+// }
