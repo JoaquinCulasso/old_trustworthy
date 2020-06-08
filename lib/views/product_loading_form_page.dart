@@ -59,6 +59,11 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   }
 
   Widget enableUpload() {
+    var _labelList = ['Verdura', 'Carne', 'Fiambre', 'Congelados'];
+    var _unitList = ['KG', '100gr', 'Unidad'];
+    var _valueLabelSelected;
+    var _valueUnitSeleced;
+
     return SingleChildScrollView(
         child: Container(
       child: Padding(
@@ -93,27 +98,57 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
                   return _price = price;
                 },
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: "Unidad"),
+              SizedBox(height: 15.0),
+              DropdownButtonFormField(
+                value: _valueUnitSeleced,
+                hint: Text('Selecciona una unidad'),
+                items: _unitList
+                    .map((String unitSelected) => DropdownMenuItem<String>(
+                          child: Text(
+                            unitSelected,
+                            style: TextStyle(),
+                          ),
+                          value: unitSelected,
+                        ))
+                    .toList(),
+                onChanged: (val) {
+                  setState(() {
+                    _valueUnitSeleced = val;
+                  });
+                },
                 validator: (unit) {
-                  return unit.isEmpty ? "Unidad es requerido" : null;
+                  return unit == null ? "Unidad es requerido" : null;
                 },
                 onSaved: (unit) {
                   return _unit = unit;
                 },
               ),
-              TextFormField(
-                decoration: InputDecoration(labelText: "Etiqueta"),
+              SizedBox(height: 15.0),
+              DropdownButtonFormField(
+                value: _valueLabelSelected,
+                hint: Text('Selecciona una etiqueta'),
+                items: _labelList
+                    .map((String labelSelected) => DropdownMenuItem<String>(
+                          child: Text(
+                            labelSelected,
+                            style: TextStyle(),
+                          ),
+                          value: labelSelected,
+                        ))
+                    .toList(),
+                onChanged: (val) {
+                  setState(() {
+                    _valueLabelSelected = val;
+                  });
+                },
                 validator: (label) {
-                  return label.isEmpty ? "Etiqueta es requerido" : null;
+                  return label == null ? "Etiqueta es requerido" : null;
                 },
                 onSaved: (label) {
                   return _label = label;
                 },
               ),
-              SizedBox(
-                height: 15.0,
-              ),
+              SizedBox(height: 15.0),
               RaisedButton(
                 elevation: 10.0,
                 child: Text("Agregar Producto"),
