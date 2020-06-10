@@ -12,7 +12,8 @@ class MyProductsCartPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Carrito de productos a comprar'),
+        title: Text('Mi Carrito'),
+        centerTitle: true,
       ),
       body: SafeArea(
         child: Container(
@@ -58,24 +59,24 @@ class MyProductsCartPage extends StatelessWidget {
               Container(
                 height: 150.0,
                 width: 215.0,
-                // color: Colors.red,
                 child: Column(
                   children: <Widget>[
                     Text(
                       product.name,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 30.0,
+                        fontSize: 22.0,
                       ),
                     ),
                     Text(
                       '\$${product.price} x ${product.unit}',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 18.0,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    accountingBar(),
                   ],
                 ),
               ),
@@ -102,6 +103,55 @@ class MyProductsCartPage extends StatelessWidget {
             indent: 15,
             endIndent: 15),
       ],
+    );
+  }
+
+  Widget accountingBar() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Container(
+        width: 150.0,
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(82, 164, 112, 1.0),
+          borderRadius: BorderRadius.circular(25),
+          border: Border.all(width: 2.0, color: Colors.black),
+        ),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              IconButton(
+                splashColor: Color.fromRGBO(47, 87, 44, 1.0),
+                tooltip: 'Sumar',
+                iconSize: 30.0,
+                color: Colors.white,
+                icon: Icon(Icons.add),
+                onPressed: () {},
+              ),
+              VerticalDivider(color: Colors.black, width: 2.0, thickness: 2.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13),
+                child: Text(
+                  '0',
+                  style: TextStyle(fontSize: 30, color: Colors.white),
+                ),
+              ),
+              VerticalDivider(color: Colors.black, width: 2, thickness: 2),
+              IconButton(
+                splashColor: Color.fromRGBO(47, 87, 44, 1.0),
+                padding: EdgeInsets.all(0),
+                iconSize: 30.0,
+                tooltip: 'Restar',
+                color: Colors.white,
+                icon: Icon(Icons.remove),
+                onPressed: () {},
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
