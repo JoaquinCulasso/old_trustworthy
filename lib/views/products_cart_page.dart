@@ -39,7 +39,8 @@ class MyProductsCartPage extends StatelessWidget {
               : ListView.builder(
                   itemCount: shoppingCart.getCart.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _itemProduct(shoppingCart.getCart[index]);
+                    return _itemProduct(
+                        shoppingCart.getCart[index], shoppingCart);
                   },
                 ),
         ),
@@ -48,7 +49,7 @@ class MyProductsCartPage extends StatelessWidget {
     );
   }
 
-  Widget _itemProduct(Product product) {
+  Widget _itemProduct(Product product, ShoppingCartProvider shoppingCart) {
     return Column(
       children: <Widget>[
         Padding(
@@ -76,7 +77,7 @@ class MyProductsCartPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    accountingBar(),
+                    _accountingBar(product, shoppingCart),
                   ],
                 ),
               ),
@@ -106,11 +107,11 @@ class MyProductsCartPage extends StatelessWidget {
     );
   }
 
-  Widget accountingBar() {
+  Widget _accountingBar(Product product, ShoppingCartProvider shoppingCart) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
-        width: 150.0,
+        width: 200.0,
         decoration: BoxDecoration(
           color: Color.fromRGBO(82, 164, 112, 1.0),
           borderRadius: BorderRadius.circular(25),
@@ -128,13 +129,16 @@ class MyProductsCartPage extends StatelessWidget {
                 iconSize: 30.0,
                 color: Colors.white,
                 icon: Icon(Icons.add),
-                onPressed: () {},
+                onPressed: () {
+                  shoppingCart.sumCounter(product.price);
+                  shoppingCart.incrementCountProduct(product);
+                },
               ),
               VerticalDivider(color: Colors.black, width: 2.0, thickness: 2.0),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 13),
+                padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  '0',
+                  shoppingCart.getProductCount(product).toString(),
                   style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
               ),
@@ -146,7 +150,10 @@ class MyProductsCartPage extends StatelessWidget {
                 tooltip: 'Restar',
                 color: Colors.white,
                 icon: Icon(Icons.remove),
-                onPressed: () {},
+                onPressed: () {
+                  shoppingCart.subtracCounter(product.price);
+                  shoppingCart.subtractCountProduct(product);
+                },
               ),
             ],
           ),
