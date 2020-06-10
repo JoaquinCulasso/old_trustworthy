@@ -11,6 +11,7 @@ class DrawerLeftBar extends StatefulWidget {
 
 class _DrawerLeftBarState extends State<DrawerLeftBar> {
   // bool _loggenIn = false; //estado para saber si esta logueado o no
+  String usuario = 'joaquin';
 
   @override
   Widget build(BuildContext context) {
@@ -94,16 +95,19 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
               // }
             },
           ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('ADMINISTRADOR'),
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => MyAdministrationPage()),
-              );
-            },
-          ),
+
+          if (usuario == "joaquin")
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('ADMINISTRADOR'),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) =>
+                          MyAdministrationPage()),
+                );
+              },
+            ),
         ],
       ),
     );
