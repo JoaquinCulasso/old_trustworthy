@@ -25,13 +25,20 @@ class ShoppingCartProvider with ChangeNotifier {
   int getProductCount(Product product) => product.getCount;
 
   void addCart(Product product) {
+    for (var item in _cart) {
+      if (product.image == item.image) {
+        incrementCountProduct(item);
+        notifyListeners();
+        return;
+      }
+    }
     _cart.add(product);
     notifyListeners();
   }
 
   void incrementCountProduct(Product product) {
     for (var item in _cart) {
-      if (item.hashCode == product.hashCode) {
+      if (item.image == product.image) {
         product.addCount();
       }
     }
@@ -40,7 +47,7 @@ class ShoppingCartProvider with ChangeNotifier {
 
   void subtractCountProduct(Product product) {
     for (var item in _cart) {
-      if (item.hashCode == product.hashCode) {
+      if (item.image == product.image) {
         product.subtractCount();
         if (product.getCount == 0) {
           _cart.remove(product);
