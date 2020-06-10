@@ -27,8 +27,9 @@ class _MyAdministrationPageState extends State<MyAdministrationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              _buttom('Agregar Producto', context, ProductLoadingFormPage()),
-              _buttom('Modificar o eliminar Producto', context,
+              _buttom('Abrir Tienda', context, MassiveMessagePage()),
+              _buttom('Agregar producto', context, ProductLoadingFormPage()),
+              _buttom('Modificar/eliminar producto', context,
                   ModifyDeleteProductPage()),
               _buttom('Mensaje masivo', context, MassiveMessagePage()),
             ],
