@@ -46,14 +46,16 @@ class ShoppingCartProvider with ChangeNotifier {
   }
 
   void subtractCountProduct(Product product) {
+    var toRemove = [];
     for (var item in _cart) {
       if (item.image == product.image) {
         product.subtractCount();
         if (product.getCount == 0) {
-          _cart.remove(product);
+          toRemove.add(product);
         }
       }
     }
+    _cart.removeWhere((element) => toRemove.contains(element));
     notifyListeners();
   }
 }
