@@ -31,6 +31,7 @@ class _MyAdministrationPageState extends State<MyAdministrationPage> {
               _buttom('Agregar producto', context, ProductLoadingFormPage()),
               _buttom('Modificar/eliminar producto', context,
                   ModifyDeleteProductPage()),
+              _buttom('ABM categoria', context, ModifyDeleteProductPage()),
               _buttom('Mensaje masivo', context, MassiveMessagePage()),
             ],
           ),
