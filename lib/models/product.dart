@@ -1,12 +1,12 @@
 class Product {
-  String _name, _price, _label, _unit, _image;
+  String _name, _price, _category, _unit, _image;
   int _count = 0;
 
-  // Product(this._name, this._price, this._label, this._unit, this._image);
-  Product(name, price, label, unit, image) {
+  // Product(this._name, this._price, this._category, this._unit, this._image);
+  Product(name, price, category, unit, image) {
     this._name = name;
     this._price = price;
-    this._label = label;
+    this._category = category;
     this._unit = unit;
     this._image = image;
     addCount();
@@ -21,8 +21,8 @@ class Product {
     this._price = price;
   }
 
-  set label(String label) {
-    this._label = label;
+  set category(String category) {
+    this._category = category;
   }
 
   set unit(String unit) {
@@ -44,7 +44,7 @@ class Product {
   //GETTERS
   String get name => this._name;
   String get price => this._price;
-  String get label => this._label;
+  String get category => this._category;
   String get unit => this._unit;
   String get image => this._image;
   int get getCount => this._count;

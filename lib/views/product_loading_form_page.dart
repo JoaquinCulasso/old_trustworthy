@@ -16,7 +16,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   String _name;
   String _price;
   String _unit;
-  String _label;
+  String _category;
 
   String url; // url de la imagen
   final formKey = GlobalKey<FormState>();
@@ -59,9 +59,9 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   }
 
   Widget enableUpload() {
-    var _labelList = ['Verdura', 'Carne', 'Fiambre', 'Congelados'];
+    var _categoryList = ['Verdura', 'Carne', 'Fiambre', 'Congelados','Fruta','Higiene personal', 'Limpieza'];
     var _unitList = ['KG', '100gr', 'Unidad'];
-    var _valueLabelSelected;
+    var _valueCategorySelected;
     var _valueUnitSeleced;
 
     return SingleChildScrollView(
@@ -125,27 +125,27 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
               ),
               SizedBox(height: 15.0),
               DropdownButtonFormField(
-                value: _valueLabelSelected,
-                hint: Text('Selecciona una etiqueta'),
-                items: _labelList
-                    .map((String labelSelected) => DropdownMenuItem<String>(
+                value: _valueCategorySelected,
+                hint: Text('Selecciona una categoria'),
+                items: _categoryList
+                    .map((String categorySelected) => DropdownMenuItem<String>(
                           child: Text(
-                            labelSelected,
+                            categorySelected,
                             style: TextStyle(),
                           ),
-                          value: labelSelected,
+                          value: categorySelected,
                         ))
                     .toList(),
                 onChanged: (val) {
                   setState(() {
-                    _valueLabelSelected = val;
+                    _valueCategorySelected = val;
                   });
                 },
-                validator: (label) {
-                  return label == null ? "Etiqueta es requerido" : null;
+                validator: (category) {
+                  return category == null ? "Etiqueta es requerido" : null;
                 },
-                onSaved: (label) {
-                  return _label = label;
+                onSaved: (category) {
+                  return _category = category;
                 },
               ),
               SizedBox(height: 15.0),
@@ -201,7 +201,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
       "name": _name,
       "price": _price,
       "unit": _unit,
-      "label": _label,
+      "category": _category,
       "date": date,
       "time": time
     };

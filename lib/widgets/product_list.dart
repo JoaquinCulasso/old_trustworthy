@@ -6,9 +6,9 @@ import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:provider/provider.dart';
 
 class ProductList extends StatefulWidget {
-  final String label;
+  final String category;
 
-  ProductList({Key key, this.label}) : super(key: key);
+  ProductList({Key key, this.category}) : super(key: key);
   @override
   _ProductListState createState() => _ProductListState();
 }
@@ -23,7 +23,7 @@ class _ProductListState extends State<ProductList> {
     DatabaseReference productRef =
         FirebaseDatabase.instance.reference().child('Vieja_Confiable');
 
-    Query filterQuery = productRef.orderByChild('label').equalTo(widget.label);
+    Query filterQuery = productRef.orderByChild('category').equalTo(widget.category);
 
     filterQuery.once().then((DataSnapshot snapshot) {
       var keys = snapshot.value.keys;
@@ -35,7 +35,7 @@ class _ProductListState extends State<ProductList> {
         Product products = Product(
             data[individualKey]['name'],
             data[individualKey]['price'],
-            data[individualKey]['label'],
+            data[individualKey]['category'],
             data[individualKey]['unit'],
             data[individualKey]['image']);
 
@@ -61,7 +61,7 @@ class _ProductListState extends State<ProductList> {
                 return _item(
                     productList[index].image,
                     productList[index].name,
-                    productList[index].label,
+                    productList[index].category,
                     productList[index].price,
                     productList[index].unit,
                     context);
@@ -70,7 +70,7 @@ class _ProductListState extends State<ProductList> {
     );
   }
 
-  // Widget _item(String _image, String _name, String _label, String _price,
+  // Widget _item(String _image, String _name, String _category, String _price,
   //     String _unit, BuildContext context) {
   //   final shoppingCart = Provider.of<ShoppingCartProvider>(context);
 
@@ -93,7 +93,7 @@ class _ProductListState extends State<ProductList> {
   //         splashColor: Color.fromRGBO(25, 68, 11, 0.7),
   //         onPressed: () {
   //           shoppingCart.sumCounter(_price);
-  //           shoppingCart.addCart(Product(_name, _price, _label, _unit, _image));
+  //           shoppingCart.addCart(Product(_name, _price, _category, _unit, _image));
   //         },
   //         child: Column(
   //           crossAxisAlignment: CrossAxisAlignment.center,
@@ -122,7 +122,7 @@ class _ProductListState extends State<ProductList> {
   //   );
   // }
 
-  Widget _item(String _image, String _name, String _label, String _price,
+  Widget _item(String _image, String _name, String _category, String _price,
       String _unit, BuildContext context) {
     final shoppingCart = Provider.of<ShoppingCartProvider>(context);
 
@@ -139,7 +139,7 @@ class _ProductListState extends State<ProductList> {
             onPressed: () {
               shoppingCart.sumCounter(_price);
               shoppingCart
-                  .addCart(Product(_name, _price, _label, _unit, _image));
+                  .addCart(Product(_name, _price, _category, _unit, _image));
             },
             child: Container(
               height: 90.0,
@@ -210,7 +210,7 @@ class _ProductListState extends State<ProductList> {
 //         Product products = Product(
 //             data[individualKey]['name'],
 //             data[individualKey]['price'],
-//             data[individualKey]['label'],
+//             data[individualKey]['category'],
 //             data[individualKey]['unit'],
 //             data[individualKey]['image']);
 
@@ -242,7 +242,7 @@ class _ProductListState extends State<ProductList> {
 //                 return _item(
 //                     productList[index].image,
 //                     productList[index].name,
-//                     productList[index].label,
+//                     productList[index].category,
 //                     productList[index].price,
 //                     productList[index].unit);
 //               },
@@ -251,7 +251,7 @@ class _ProductListState extends State<ProductList> {
 //   }
 
 //   Widget _item(
-//       String _image, String _name, String _label, String _price, String _unit) {
+//       String _image, String _name, String _category, String _price, String _unit) {
 //     return Container(
 //       padding: EdgeInsets.symmetric(horizontal: 5.0),
 //       child: Container(
@@ -272,7 +272,7 @@ class _ProductListState extends State<ProductList> {
 //           onPressed: () {
 //             streamShoppingCart.incrementCounter(_price);
 //             // streamShoppingCart
-//             //     .addProduct(Product(_name, _price, _label, _unit, _image));
+//             //     .addProduct(Product(_name, _price, _category, _unit, _image));
 //           },
 //           child: Column(
 //             crossAxisAlignment: CrossAxisAlignment.center,

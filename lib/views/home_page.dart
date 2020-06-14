@@ -4,7 +4,7 @@ import 'package:old_trustworthy/widgets/products_cart.dart';
 import 'package:old_trustworthy/widgets/drawer_left_bar.dart';
 import 'package:old_trustworthy/widgets/product_list.dart';
 import 'package:old_trustworthy/widgets/product_title.dart';
-import 'package:old_trustworthy/widgets/selection_labels.dart';
+import 'package:old_trustworthy/widgets/selection_categories.dart';
 
 class MyHomePage extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -31,28 +31,28 @@ class MyHomePage extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  SelectionLabels(),
+                  SelectionCategories(),
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Verduras'),
-                  ProductList(label: 'Verdura'), //Verduras
+                  ProductList(category: 'Verdura'), //Verduras
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Frutas'),
-                  ProductList(label: 'Fruta'), //Frutas
+                  ProductList(category: 'Fruta'), //Frutas
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Carnes'),
-                  ProductList(label: 'Carne'), //Carnes
+                  ProductList(category: 'Carne'), //Carnes
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Congelados'),
-                  ProductList(label: 'Congelados'), //Congelados
+                  ProductList(category: 'Congelados'), //Congelados
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Higiene personal'),
-                  ProductList(label: 'Higiene personal'), //Higiene personal
+                  ProductList(category: 'Higiene personal'), //Higiene personal
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Limpieza'),
-                  ProductList(label: 'Limpieza'), //Limpieza
+                  ProductList(category: 'Limpieza'), //Limpieza
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Fiambres'),
-                  ProductList(label: 'Fiambre'), //Fiambres
+                  ProductList(category: 'Fiambre'), //Fiambres
                   Divider(color: Colors.white, thickness: 5.0, height: 0.0),
                 ],
               ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
 import 'package:old_trustworthy/views/administration_page.dart';
 import 'package:old_trustworthy/views/home_page.dart';
+import 'package:provider/provider.dart';
 
 class DrawerLeftBar extends StatefulWidget {
   @override
@@ -15,6 +17,8 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
 
   @override
   Widget build(BuildContext context) {
+    final shoppingCart = Provider.of<ShoppingCartProvider>(context);
+
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
@@ -52,6 +56,8 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
             leading: Icon(Icons.home),
             title: Text('Inicio'),
             onTap: () {
+              shoppingCart.resetCounter();
+              shoppingCart.getCart.clear();
               Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (BuildContext context) => MyHomePage()),

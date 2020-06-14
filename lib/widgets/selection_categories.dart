@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../old_trustworthy_icons.dart';
 
-class SelectionLabels extends StatefulWidget {
+class SelectionCategories extends StatefulWidget {
   @override
-  _SelectionLabelsState createState() => _SelectionLabelsState();
+  _SelectionCategoriesState createState() => _SelectionCategoriesState();
 }
 
-class _SelectionLabelsState extends State<SelectionLabels> {
+class _SelectionCategoriesState extends State<SelectionCategories> {
   @override
   Widget build(BuildContext context) {
     return Column(
