@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+//prvider
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
+//views
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
 import 'package:old_trustworthy/views/administration_page.dart';
-import 'package:old_trustworthy/views/home_page.dart';
-import 'package:provider/provider.dart';
+
 
 class DrawerLeftBar extends StatefulWidget {
   @override
@@ -58,16 +61,18 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
             onTap: () {
               shoppingCart.resetCounter();
               shoppingCart.getCart.clear();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                    builder: (BuildContext context) => MyHomePage()),
-              );
+              Navigator.of(context).pushReplacementNamed('/home');
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //       builder: (BuildContext context) => MyHomePage()),
+              // );
             },
           ),
           ListTile(
             leading: Icon(Icons.location_on),
             title: Text('Mis direcciones'),
             onTap: () {
+              // Navigator.of(context).pushReplacementNamed('/address');
               Navigator.of(context).push(
                 MaterialPageRoute(
                     builder: (BuildContext context) => MyAddressPage()),
@@ -83,6 +88,7 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
             leading: Icon(Icons.account_circle),
             title: Text('Mi cuenta'),
             onTap: () {
+              // Navigator.of(context).pushReplacementNamed('/account');
               //Otra forma de navegar entre paginas
               // Navigator.push(
               //   context,
@@ -94,10 +100,10 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
                     builder: (BuildContext context) => MyAccountPage()),
               );
               // } else {
-              //   Navigator.of(context).push(
-              //     MaterialPageRoute(
-              //         builder: (BuildContext context) => MyLoginPage()),
-              //   );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //       builder: (BuildContext context) => MyLoginPage()),
+              // );
               // }
             },
           ),
@@ -107,6 +113,7 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
               leading: Icon(Icons.settings),
               title: Text('ADMINISTRADOR'),
               onTap: () {
+                // Navigator.of(context).pushReplacementNamed('/administration');
                 Navigator.of(context).push(
                   MaterialPageRoute(
                       builder: (BuildContext context) =>
