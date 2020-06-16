@@ -1,10 +1,15 @@
+import 'package:flutter/material.dart';
+import 'dart:io';
+
+//firebase
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+
+//upload image
 import 'package:image_picker/image_picker.dart';
-import 'dart:io';
 import 'package:intl/intl.dart';
-import 'package:old_trustworthy/views/home_page.dart';
+
 
 class ProductLoadingFormPage extends StatefulWidget {
   @override
@@ -59,7 +64,15 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   }
 
   Widget enableUpload() {
-    var _categoryList = ['Verdura', 'Carne', 'Fiambre', 'Congelados','Fruta','Higiene personal', 'Limpieza'];
+    var _categoryList = [
+      'Verdura',
+      'Carne',
+      'Fiambre',
+      'Congelados',
+      'Fruta',
+      'Higiene personal',
+      'Limpieza'
+    ];
     var _unitList = ['KG', '100gr', 'Unidad'];
     var _valueCategorySelected;
     var _valueUnitSeleced;
@@ -178,11 +191,15 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
       // Guardar el post a firebase database: database realtime
       saveToDatabase(url);
 
-      // Regresar a Home
+      //vamos a probar guardar los datos a cloud firestore
+      // saveToFirestore(url);
       Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return MyHomePage();
-      }));
+      Navigator.of(context).pushReplacementNamed('/productLoading');
+      // Regresar a Home
+      // Navigator.pop(context);
+      // Navigator.push(context, MaterialPageRoute(builder: (context) {
+      //   return MyHomePage();
+      // }));
     }
   }
 
@@ -196,6 +213,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
     String time = formatTime.format(dbTimeKey);
 
     DatabaseReference ref = FirebaseDatabase.instance.reference();
+
     var data = {
       "image": url,
       "name": _name,
@@ -208,6 +226,32 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
 
     ref.child("Vieja_Confiable").push().set(data);
   }
+
+  // void saveToFirestore(String url) {
+  //   // Guardar un post (image, descripcion, date, time)
+  //   var dbTimeKey = DateTime.now();
+  //   var formatDate = DateFormat('MMM d, yyyy');
+  //   var formatTime = DateFormat('EEEE, hh:mm aaa');
+
+  //   String date = formatDate.format(dbTimeKey);
+  //   String time = formatTime.format(dbTimeKey);
+
+  //   //reference to cloud firestore
+  //   var ref = Firestore.instance.collection('Products').document();
+
+  //   var data = {
+  //     "image": url,
+  //     "name": _name,
+  //     "price": _price,
+  //     "unit": _unit,
+  //     "category": _category,
+  //     "date": date,
+  //     "time": time
+  //   };
+
+  //   //save to cloudfirestore
+  //   ref.setData(data);
+  // }
 
   bool validateAndSave() {
     final form = formKey.currentState;
