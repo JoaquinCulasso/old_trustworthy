@@ -124,7 +124,7 @@ class MyProductsCartPage extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               IconButton(
-                splashColor: Color.fromRGBO(47, 87, 44, 1.0),
+                highlightColor: Color.fromRGBO(47, 87, 44, 1.0),
                 tooltip: 'Sumar',
                 iconSize: 30.0,
                 color: Colors.white,
@@ -144,7 +144,7 @@ class MyProductsCartPage extends StatelessWidget {
               ),
               VerticalDivider(color: Colors.black, width: 2, thickness: 2),
               IconButton(
-                splashColor: Color.fromRGBO(47, 87, 44, 1.0),
+                highlightColor: Color.fromRGBO(47, 87, 44, 1.0),
                 padding: EdgeInsets.all(0),
                 iconSize: 30.0,
                 tooltip: 'Restar',
