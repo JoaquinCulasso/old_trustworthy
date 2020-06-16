@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
+import 'package:old_trustworthy/views/account_page.dart';
+import 'package:old_trustworthy/views/address_page.dart';
+import 'package:old_trustworthy/views/administration_page.dart';
+import 'package:old_trustworthy/views/massive_message_page.dart';
+import 'package:old_trustworthy/views/modify_delete_product_page.dart';
+import 'package:old_trustworthy/views/product_loading_form_page.dart';
 import 'package:provider/provider.dart';
 import 'views/home_page.dart';
 
@@ -31,9 +37,16 @@ class MyApp extends StatelessWidget {
             ),
           ),
           debugShowCheckedModeBanner: false,
-          initialRoute: 'home',
+          initialRoute: '/home',
           routes: {
-            'home': (context) => MyHomePage(),
+            '/home': (context) => MyHomePage(),
+            '/address': (context) => MyAddressPage(),
+            '/account': (context) => MyAccountPage(),
+            '/administration': (context) => MyAdministrationPage(),
+            '/login': (context) => MyAdministrationPage(),
+            '/massiveMessage': (context) => MassiveMessagePage(),
+            '/modifyDelete': (context) => ModifyDeleteProductPage(),
+            '/productLoading': (context) => ProductLoadingFormPage()
           },
         ));
   }
