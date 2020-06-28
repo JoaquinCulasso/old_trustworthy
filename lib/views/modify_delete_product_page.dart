@@ -63,7 +63,7 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Container(
-                            height: 150.0,
+                            height: 180.0,
                             width: 215.0,
                             child: Column(
                               children: <Widget>[
@@ -173,6 +173,7 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                                   style: TextStyle(fontSize: 20)),
                               onPressed: () {
                                 setState(() {
+                                  //delete image from FirebaseStorage
                                   FirebaseStorage.instance
                                       .ref()
                                       .child("Vieja_Confiable")
@@ -201,10 +202,6 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                                     print(
                                         'Error: ${error.code} ${error.message}');
                                   });
-
-                                  // Query filterQuery = productRef
-                                  //     .orderByChild('image')
-                                  //     .equalTo(product.image);
                                 });
                                 Navigator.of(context).pop();
                               },
