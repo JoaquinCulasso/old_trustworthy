@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:old_trustworthy/providers/account_provider.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
@@ -15,8 +16,12 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (context) => ShoppingCartProvider(),
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider(create: (context) => ShoppingCartProvider()),
+          ChangeNotifierProvider(create: (context) => AccountProvider()),
+        ],
+        // create: (context) => ShoppingCartProvider(),
         child: MaterialApp(
           theme: ThemeData.from(
             colorScheme: ColorScheme(
