@@ -1,6 +1,9 @@
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:old_trustworthy/models/product.dart';
 
 class ModifyDeleteProductPage extends StatefulWidget {
@@ -144,7 +147,7 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                 tooltip: 'Modificar',
                 iconSize: 30.0,
                 color: Colors.white,
-                icon: Icon(Icons.mode_edit),
+                icon: Icon(Icons.edit),
                 onPressed: () {},
               ),
               VerticalDivider(color: Colors.black, width: 2, thickness: 2),
@@ -154,7 +157,7 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                 iconSize: 30.0,
                 tooltip: 'Eliminar',
                 color: Colors.white,
-                icon: Icon(Icons.restore_from_trash),
+                icon: Icon(CupertinoIcons.delete_simple),
                 onPressed: () {
                   showDialog(
                       context: context,
