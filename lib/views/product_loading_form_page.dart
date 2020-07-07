@@ -10,7 +10,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 
-
 class ProductLoadingFormPage extends StatefulWidget {
   @override
   _ProductLoadingFormPageState createState() => _ProductLoadingFormPageState();
@@ -179,11 +178,11 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   void uploadStatusImage() async {
     if (validateAndSave()) {
       // Subir imagen a firebase storage
-      final StorageReference postIamgeRef =
+      final StorageReference postImageRef =
           FirebaseStorage.instance.ref().child("Vieja_Confiable");
       var timeKey = DateTime.now();
       final StorageUploadTask uploadTask =
-          postIamgeRef.child(timeKey.toString() + ".jpg").putFile(productImage);
+          postImageRef.child(timeKey.toString() + ".jpg").putFile(productImage);
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
       url = imageUrl.toString();
       print("Image url: " + url);
