@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:old_trustworthy/models/product.dart';
+import 'package:old_trustworthy/views/product_update_form_page.dart';
 
 class ModifyDeleteProductPage extends StatefulWidget {
   @override
@@ -148,7 +149,9 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                 iconSize: 30.0,
                 color: Colors.white,
                 icon: Icon(Icons.edit),
-                onPressed: () {},
+                onPressed: () {
+                  _modifyProduct(product);
+                },
               ),
               VerticalDivider(color: Colors.black, width: 2, thickness: 2),
               IconButton(
@@ -159,67 +162,7 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                 color: Colors.white,
                 icon: Icon(CupertinoIcons.delete_simple),
                 onPressed: () {
-                  showDialog(
-                      context: context,
-                      builder: (buildContext) {
-                        return AlertDialog(
-                          title: Text('Eliminar producto',
-                              style: TextStyle(fontSize: 25)),
-                          content: Text(
-                            'Producto: ${product.name}.\nPrecio: \$${product.price}.\nUnidad: ${product.unit}.\nCategoria: ${product.category}.',
-                            style: TextStyle(fontSize: 20),
-                          ),
-                          actions: <Widget>[
-                            RaisedButton(
-                              color: Color.fromRGBO(47, 87, 44, 1.0),
-                              child: Text('Aceptar',
-                                  style: TextStyle(fontSize: 20)),
-                              onPressed: () {
-                                setState(() {
-                                  //delete image from FirebaseStorage
-                                  FirebaseStorage.instance
-                                      .ref()
-                                      .child("Vieja_Confiable")
-                                      .getStorage()
-                                      .getReferenceFromUrl(product.image)
-                                      .then((value) => value.delete());
-
-                                  //delete product from view list
-                                  productList.remove(product);
-
-                                  //delete from realtime database
-                                  FirebaseDatabase.instance
-                                      .reference()
-                                      .child('Vieja_Confiable')
-                                      .orderByChild('image')
-                                      .equalTo(product.image)
-                                      .onChildAdded
-                                      .listen((event) {
-                                    FirebaseDatabase.instance
-                                        .reference()
-                                        .child('Vieja_Confiable')
-                                        .child(event.snapshot.key)
-                                        .remove();
-                                  }, onError: (Object o) {
-                                    final DatabaseError error = o;
-                                    print(
-                                        'Error: ${error.code} ${error.message}');
-                                  });
-                                });
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            RaisedButton(
-                              color: Color.fromRGBO(47, 87, 44, 1.0),
-                              child: Text('Cancelar',
-                                  style: TextStyle(fontSize: 20)),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            )
-                          ],
-                        );
-                      });
+                  _deleteProduct(product);
                 },
               ),
             ],
@@ -227,5 +170,130 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
         ),
       ),
     );
+  }
+
+  Future _modifyProduct(Product product) {
+    return showDialog(
+        context: context,
+        builder: (buildContext) {
+          return AlertDialog(
+            title: Text('Modificar producto', style: TextStyle(fontSize: 25)),
+            content: Text(
+              'Producto: ${product.name}.\nPrecio: \$${product.price}.\nUnidad: ${product.unit}.\nCategoria: ${product.category}.',
+              style: TextStyle(fontSize: 20),
+            ),
+            actions: <Widget>[
+              RaisedButton(
+                color: Color.fromRGBO(47, 87, 44, 1.0),
+                child: Text('Aceptar', style: TextStyle(fontSize: 20)),
+                onPressed: () {
+                  setState(() {
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) =>
+                            ProductUpdateFormPage(product: product)));
+                    // Navigator.of(context)
+                    //     .pushReplacementNamed('/productUpdate');
+                    // //modify image from FirebaseStorage
+                    // FirebaseStorage.instance
+                    //     .ref()
+                    //     .child("Vieja_Confiable")
+                    //     .getStorage()
+                    //     .getReferenceFromUrl(product.image)
+                    //     .then((value) => value.delete());
+
+                    // //delete product from view list
+                    // productList.remove(product);
+
+                    // //delete from realtime database
+                    // FirebaseDatabase.instance
+                    //     .reference()
+                    //     .child('Vieja_Confiable')
+                    //     .orderByChild('image')
+                    //     .equalTo(product.image)
+                    //     .onChildAdded
+                    //     .listen((event) {
+                    //   FirebaseDatabase.instance
+                    //       .reference()
+                    //       .child('Vieja_Confiable')
+                    //       .child(event.snapshot.key)
+                    //       .remove();
+                    // }, onError: (Object o) {
+                    //   final DatabaseError error = o;
+                    //   print('Error: ${error.code} ${error.message}');
+                    // });
+                  });
+                  // Navigator.of(context).pop();
+                },
+              ),
+              RaisedButton(
+                color: Color.fromRGBO(47, 87, 44, 1.0),
+                child: Text('Cancelar', style: TextStyle(fontSize: 20)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
+  Future _deleteProduct(Product product) {
+    return showDialog(
+        context: context,
+        builder: (buildContext) {
+          return AlertDialog(
+            title: Text('Eliminar producto', style: TextStyle(fontSize: 25)),
+            content: Text(
+              'Producto: ${product.name}.\nPrecio: \$${product.price}.\nUnidad: ${product.unit}.\nCategoria: ${product.category}.',
+              style: TextStyle(fontSize: 20),
+            ),
+            actions: <Widget>[
+              RaisedButton(
+                color: Color.fromRGBO(47, 87, 44, 1.0),
+                child: Text('Aceptar', style: TextStyle(fontSize: 20)),
+                onPressed: () {
+                  setState(() {
+                    //delete image from FirebaseStorage
+                    FirebaseStorage.instance
+                        .ref()
+                        .child("Vieja_Confiable")
+                        .getStorage()
+                        .getReferenceFromUrl(product.image)
+                        .then((value) => value.delete());
+
+                    //delete product from view list
+                    productList.remove(product);
+
+                    //delete from realtime database
+                    FirebaseDatabase.instance
+                        .reference()
+                        .child('Vieja_Confiable')
+                        .orderByChild('image')
+                        .equalTo(product.image)
+                        .onChildAdded
+                        .listen((event) {
+                      FirebaseDatabase.instance
+                          .reference()
+                          .child('Vieja_Confiable')
+                          .child(event.snapshot.key)
+                          .remove();
+                    }, onError: (Object o) {
+                      final DatabaseError error = o;
+                      print('Error: ${error.code} ${error.message}');
+                    });
+                  });
+                  Navigator.of(context).pop();
+                },
+              ),
+              RaisedButton(
+                color: Color.fromRGBO(47, 87, 44, 1.0),
+                child: Text('Cancelar', style: TextStyle(fontSize: 20)),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
   }
 }
