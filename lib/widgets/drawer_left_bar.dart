@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:old_trustworthy/providers/login_provider.dart';
 import 'package:provider/provider.dart';
 
 //prvider
@@ -7,7 +8,6 @@ import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
 import 'package:old_trustworthy/views/administration_page.dart';
-
 
 class DrawerLeftBar extends StatefulWidget {
   @override
@@ -21,37 +21,83 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
   @override
   Widget build(BuildContext context) {
     final shoppingCart = Provider.of<ShoppingCartProvider>(context);
+    final LoginProvider loginProvider = Provider.of<LoginProvider>(context);
 
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
-        //mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           DrawerHeader(
+            padding: EdgeInsets.all(0.0),
             decoration: BoxDecoration(
               color: Color.fromRGBO(47, 87, 44, 1.0),
             ),
             child: Stack(
               children: <Widget>[
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: CircleAvatar(
-                    backgroundImage: NetworkImage(
-                        'https://image.freepik.com/vector-gratis/perfil-avatar-hombre-icono-redondo_24640-14044.jpg'),
-                    radius: 50.0,
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    'Nombre Usuario',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 21,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        CircleAvatar(
+                          backgroundImage: NetworkImage(loginProvider
+                                  .accountUser.profilePicture.isEmpty
+                              ? 'https://image.freepik.com/vector-gratis/perfil-avatar-hombre-icono-redondo_24640-14044.jpg'
+                              : loginProvider.accountUser.profilePicture),
+                          radius: 50.0,
+                        ),
+                      ],
                     ),
-                  ),
-                )
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            loginProvider.accountUser.nameUser.isEmpty
+                                ? 'Nombre de Usuario'
+                                : loginProvider.accountUser.nameUser,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 21,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ],
+              // children: <Widget>[
+              //   Align(
+              //     alignment: Alignment.centerLeft,
+              //     child: CircleAvatar(
+              //       backgroundImage: NetworkImage(loginProvider
+              //               .accountUser.profilePicture.isEmpty
+              //           ? 'https://image.freepik.com/vector-gratis/perfil-avatar-hombre-icono-redondo_24640-14044.jpg'
+              //           : loginProvider.accountUser.profilePicture),
+              //       radius: 50.0,
+              //     ),
+              //   ),
+              //   Align(
+              //     alignment: Alignment.centerRight,
+              //     child: Text(
+              //       loginProvider.accountUser.nameUser.isEmpty
+              //           ? 'Nombre Usuariosdfdsfsdfdsdf'
+              //           : loginProvider.accountUser.nameUser,
+              //       style: TextStyle(
+              //         color: Colors.white,
+              //         fontSize: 21,
+              //       ),
+              //     ),
+              //   )
+              // ],
             ),
           ),
           //Acá voy agregando la lista con opciones
