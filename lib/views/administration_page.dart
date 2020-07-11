@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:old_trustworthy/views/massive_message_page.dart';
-import 'package:old_trustworthy/views/modify_delete_product_page.dart';
-import 'package:old_trustworthy/views/product_loading_form_page.dart';
 
 class MyAdministrationPage extends StatefulWidget {
   @override
@@ -27,12 +24,16 @@ class _MyAdministrationPageState extends State<MyAdministrationPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
-              _buttom('Abrir Tienda', context, MassiveMessagePage()),
-              _buttom('Agregar producto', context, ProductLoadingFormPage()),
+              _buttom('Abrir Tienda', context,
+                  '/massiveMessage'), //MassiveMessagePage()),
+              _buttom('Agregar producto', context,
+                  '/productLoading'), //ProductLoadingFormPage()),
               _buttom('Modificar/eliminar producto', context,
-                  ModifyDeleteProductPage()),
-              _buttom('ABM categoria', context, ModifyDeleteProductPage()),
-              _buttom('Mensaje masivo', context, MassiveMessagePage()),
+                  '/modifyDelete'), // ModifyDeleteProductPage()),
+              _buttom('ABM categoria', context,
+                  '/massiveMessage'), //ModifyDeleteProductPage()),
+              _buttom('Mensaje masivo', context,
+                  '/massiveMessage'), //MassiveMessagePage()),
             ],
           ),
         ),
@@ -56,8 +57,7 @@ Widget _buttom(String title, context, route) {
     textColor: Colors.white,
     color: Color.fromRGBO(47, 87, 44, 1.0),
     onPressed: () {
-      Navigator.of(context)
-          .push(MaterialPageRoute(builder: (BuildContext context) => route));
+      Navigator.of(context).pushNamed(route);
     },
   );
 }
