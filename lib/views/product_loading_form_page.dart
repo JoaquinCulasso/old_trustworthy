@@ -192,13 +192,9 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
 
       //vamos a probar guardar los datos a cloud firestore
       // saveToFirestore(url);
+
+      //vuelvo a la vista de administracion
       Navigator.pop(context);
-      Navigator.of(context).pushReplacementNamed('/productLoading');
-      // Regresar a Home
-      // Navigator.pop(context);
-      // Navigator.push(context, MaterialPageRoute(builder: (context) {
-      //   return MyHomePage();
-      // }));
     }
   }
 
