@@ -188,41 +188,13 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                 child: Text('Aceptar', style: TextStyle(fontSize: 20)),
                 onPressed: () {
                   setState(() {
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) =>
-                            ProductUpdateFormPage(product: product)));
-                    // Navigator.of(context)
-                    //     .pushReplacementNamed('/productUpdate');
-                    // //modify image from FirebaseStorage
-                    // FirebaseStorage.instance
-                    //     .ref()
-                    //     .child("Vieja_Confiable")
-                    //     .getStorage()
-                    //     .getReferenceFromUrl(product.image)
-                    //     .then((value) => value.delete());
-
-                    // //delete product from view list
-                    // productList.remove(product);
-
-                    // //delete from realtime database
-                    // FirebaseDatabase.instance
-                    //     .reference()
-                    //     .child('Vieja_Confiable')
-                    //     .orderByChild('image')
-                    //     .equalTo(product.image)
-                    //     .onChildAdded
-                    //     .listen((event) {
-                    //   FirebaseDatabase.instance
-                    //       .reference()
-                    //       .child('Vieja_Confiable')
-                    //       .child(event.snapshot.key)
-                    //       .remove();
-                    // }, onError: (Object o) {
-                    //   final DatabaseError error = o;
-                    //   print('Error: ${error.code} ${error.message}');
-                    // });
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              ProductUpdateFormPage(product: product)),
+                      ModalRoute.withName('/modifyDelete'),
+                    );
                   });
-                  // Navigator.of(context).pop();
                 },
               ),
               RaisedButton(
