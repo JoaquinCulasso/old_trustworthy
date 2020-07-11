@@ -29,6 +29,7 @@ class _SelectionCategoriesState extends State<SelectionCategories> {
             _bottonAction(OldTrustworthyIcons.lacteos_fiambres, () {}),
             _bottonAction(OldTrustworthyIcons.limpieza, () {}),
             _bottonAction(OldTrustworthyIcons.verduras, () {}),
+            _bottonAction(OldTrustworthyIcons.verduras, () {}),
           ],
         ),
       ],
