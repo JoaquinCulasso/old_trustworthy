@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:old_trustworthy/widgets/products_cart.dart';
 import 'package:old_trustworthy/widgets/drawer_left_bar.dart';
-import 'package:old_trustworthy/widgets/product_list.dart';
+import 'package:old_trustworthy/widgets/product_list_horizontal.dart';
 import 'package:old_trustworthy/widgets/product_title.dart';
 import 'package:old_trustworthy/widgets/selection_categories.dart';
 
@@ -34,25 +34,26 @@ class MyHomePage extends StatelessWidget {
                   SelectionCategories(),
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Verduras'),
-                  ProductList(category: 'Verdura'), //Verduras
+                  ProductListHorizontal(category: 'Verdura'), //Verduras
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Frutas'),
-                  ProductList(category: 'Fruta'), //Frutas
+                  ProductListHorizontal(category: 'Fruta'), //Frutas
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Carnes'),
-                  ProductList(category: 'Carne'), //Carnes
+                  ProductListHorizontal(category: 'Carne'), //Carnes
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Congelados'),
-                  ProductList(category: 'Congelados'), //Congelados
+                  ProductListHorizontal(category: 'Congelados'), //Congelados
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Higiene personal'),
-                  ProductList(category: 'Higiene personal'), //Higiene personal
+                  ProductListHorizontal(
+                      category: 'Higiene personal'), //Higiene personal
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Limpieza'),
-                  ProductList(category: 'Limpieza'), //Limpieza
+                  ProductListHorizontal(category: 'Limpieza'), //Limpieza
                   Divider(color: Colors.black, thickness: 5.0, height: 0.0),
                   ProductTitle(title: 'Fiambres'),
-                  ProductList(category: 'Fiambre'), //Fiambres
+                  ProductListHorizontal(category: 'Fiambre'), //Fiambres
                   Divider(color: Colors.white, thickness: 5.0, height: 0.0),
                 ],
               ),

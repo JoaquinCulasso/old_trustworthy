@@ -5,15 +5,15 @@ import 'package:old_trustworthy/models/product.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:provider/provider.dart';
 
-class ProductList extends StatefulWidget {
+class ProductListHorizontal extends StatefulWidget {
   final String category;
 
-  ProductList({Key key, this.category}) : super(key: key);
+  ProductListHorizontal({Key key, this.category}) : super(key: key);
   @override
   _ProductListState createState() => _ProductListState();
 }
 
-class _ProductListState extends State<ProductList> {
+class _ProductListState extends State<ProductListHorizontal> {
   List<Product> productList = [];
 
   @override
@@ -23,7 +23,8 @@ class _ProductListState extends State<ProductList> {
     DatabaseReference productRef =
         FirebaseDatabase.instance.reference().child('Vieja_Confiable');
 
-    Query filterQuery = productRef.orderByChild('category').equalTo(widget.category);
+    Query filterQuery =
+        productRef.orderByChild('category').equalTo(widget.category);
 
     filterQuery.once().then((DataSnapshot snapshot) {
       var keys = snapshot.value.keys;
