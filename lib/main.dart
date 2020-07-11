@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:old_trustworthy/providers/account_provider.dart';
+import 'package:old_trustworthy/providers/login_provider.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
@@ -19,9 +19,24 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (context) => ShoppingCartProvider()),
-          ChangeNotifierProvider(create: (context) => AccountProvider()),
+          ChangeNotifierProvider(create: (context) => LoginProvider()),
+
+          // ChangeNotifierProvider(
+          //   create: (context) => LoginProvider(),
+          //   builder: (BuildContext context, Widget child) {
+          //     print('123123');
+          //     return Selector<LoginProvider, bool>(
+          //         selector: (_, LoginProvider loginProvider) =>
+          //             loginProvider.isLoggedIn,
+          //         builder: (BuildContext context, bool isLoggedIn, _) {
+          //           return child;
+          //         });
+          //   },
+          // ),
         ],
+
         // create: (context) => ShoppingCartProvider(),
+
         child: MaterialApp(
           theme: ThemeData.from(
             colorScheme: ColorScheme(
