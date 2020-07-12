@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:old_trustworthy/providers/category_provider.dart';
 
 import '../old_trustworthy_icons.dart';
 
@@ -10,40 +13,67 @@ class SelectionCategories extends StatefulWidget {
 class _SelectionCategoriesState extends State<SelectionCategories> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _bottonAction(OldTrustworthyIcons.carnes, () {}),
-            _bottonAction(OldTrustworthyIcons.congelados, () {}),
-            _bottonAction(OldTrustworthyIcons.frutas, () {}),
-            _bottonAction(OldTrustworthyIcons.higiene_personal, () {}),
-          ],
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            _bottonAction(OldTrustworthyIcons.lacteos_fiambres, () {}),
-            _bottonAction(OldTrustworthyIcons.limpieza, () {}),
-            _bottonAction(OldTrustworthyIcons.verduras, () {}),
-            _bottonAction(OldTrustworthyIcons.verduras, () {}),
-          ],
-        ),
-      ],
+    final CategoryProvider categoryProvider =
+        Provider.of<CategoryProvider>(context);
+
+    return Padding(
+      padding: const EdgeInsets.all(10.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _buttonAction(
+                  'Carnes', OldTrustworthyIcons.carnes, categoryProvider),
+              _buttonAction('Congelados', OldTrustworthyIcons.congelados,
+                  categoryProvider),
+              _buttonAction(
+                  'Frutas', OldTrustworthyIcons.frutas, categoryProvider),
+              _buttonAction('Higiene personal',
+                  OldTrustworthyIcons.higiene_personal, categoryProvider),
+            ],
+          ),
+          SizedBox(height: 10.0),
+          Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              _buttonAction('Lacteos fiambres',
+                  OldTrustworthyIcons.lacteos_fiambres, categoryProvider),
+              _buttonAction(
+                  'Limpieza', OldTrustworthyIcons.limpieza, categoryProvider),
+              _buttonAction(
+                  'Verduras', OldTrustworthyIcons.verduras, categoryProvider),
+              _buttonAction(
+                  'Almacen', OldTrustworthyIcons.verduras, categoryProvider),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
 
-Widget _bottonAction(IconData icon, Function callback) {
-  return InkWell(
-    borderRadius: BorderRadius.circular(25),
+Widget _buttonAction(
+    String name, IconData icon, CategoryProvider categoryProvider) {
+  return RaisedButton(
+    splashColor: Colors.red,
+    shape: CircleBorder(
+      side: BorderSide(
+        color: categoryProvider.categoryActive == name
+            ? Colors.blueAccent
+            : Colors.grey,
+        width: categoryProvider.categoryActive == name ? 3.0 : 1.0,
+        style: BorderStyle.solid,
+      ),
+    ),
     child: Padding(
-      padding: EdgeInsets.all(15.0),
+      padding: EdgeInsets.all(12.0),
       child: Icon(icon),
     ),
-    onTap: callback,
+    onPressed: () {
+      categoryProvider.selectedCategory(name);
+    },
   );
 }
