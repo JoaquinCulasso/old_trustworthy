@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:old_trustworthy/models/product.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:old_trustworthy/widgets/send_cart_order.dart';
-import 'package:provider/provider.dart';
 
 class MyProductsCartPage extends StatelessWidget {
   @override
