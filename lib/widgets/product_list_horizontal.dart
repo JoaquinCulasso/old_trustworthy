@@ -136,7 +136,7 @@ class _ProductListState extends State<ProductListHorizontal> {
         children: <Widget>[
           MaterialButton(
             padding: EdgeInsets.all(0),
-            splashColor: Colors.red, // Color.fromRGBO(25, 68, 11, 0.7),
+            splashColor: Color.fromRGBO(25, 68, 11, 0.7), // Colors.red,
             onPressed: () {
               shoppingCart.sumCounter(_price);
               shoppingCart
