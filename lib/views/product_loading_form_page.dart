@@ -64,15 +64,21 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
 
   Widget enableUpload() {
     var _categoryList = [
-      'Verdura',
-      'Carne',
-      'Fiambre',
+      'Carnes',
       'Congelados',
-      'Fruta',
+      'Frutas',
+      'Lacteos fiambres',
+      'Verduras',
+      'Limpieza',
       'Higiene personal',
-      'Limpieza'
+      'Almacen',
     ];
-    var _unitList = ['KG', '100gr', 'Unidad'];
+    var _unitList = [
+      'KG',
+      '100gr',
+      'Unidad',
+    ];
+
     var _valueCategorySelected;
     var _valueUnitSeleced;
 
@@ -104,7 +110,16 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
               TextFormField(
                 decoration: InputDecoration(labelText: "Precio"),
                 validator: (price) {
-                  return price.isEmpty ? "Precio es requerido" : null;
+                  if (price.isEmpty) {
+                    return "precio es requerido";
+                  } else if (double.tryParse(price) == null) {
+                    return "Solo numeros y los decimales con .";
+                  } else {
+                    return null;
+                  }
+                  // return price.isEmpty
+                  //     ? "Precio es requerido"
+                  //     : null;
                 },
                 onSaved: (price) {
                   return _price = price;
@@ -154,7 +169,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
                   });
                 },
                 validator: (category) {
-                  return category == null ? "Etiqueta es requerido" : null;
+                  return category == null ? "Categoria es requerido" : null;
                 },
                 onSaved: (category) {
                   return _category = category;
@@ -163,7 +178,12 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
               SizedBox(height: 15.0),
               RaisedButton(
                 elevation: 10.0,
-                child: Text("Agregar Producto"),
+                padding: EdgeInsets.all(12),
+                child: Text(
+                  "Agregar Producto",
+                  style: TextStyle(fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
                 textColor: Colors.white,
                 color: Color.fromRGBO(47, 87, 44, 1.0),
                 onPressed: uploadStatusImage,
