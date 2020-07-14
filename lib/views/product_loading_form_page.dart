@@ -201,8 +201,11 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
       final StorageReference postImageRef =
           FirebaseStorage.instance.ref().child("Vieja_Confiable");
       var timeKey = DateTime.now();
+
       final StorageUploadTask uploadTask =
           postImageRef.child(timeKey.toString() + ".jpg").putFile(productImage);
+
+      //recupero la url
       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
       url = imageUrl.toString();
       print("Image url: " + url);
@@ -219,7 +222,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   }
 
   void saveToDatabase(String url) {
-    // Guardar un post (image, descripcion, date, time)
+    // Save to Firebase Database Realtime (image, name, price, unit, category, date, time)
     var dbTimeKey = DateTime.now();
     var formatDate = DateFormat('MMM d, yyyy');
     var formatTime = DateFormat('EEEE, hh:mm aaa');
@@ -238,7 +241,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
       "date": date,
       "time": time
     };
-
+    //push to data
     ref.child("Vieja_Confiable").push().set(data);
   }
 
