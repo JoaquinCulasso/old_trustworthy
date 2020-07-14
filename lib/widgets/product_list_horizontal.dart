@@ -125,7 +125,8 @@ class _ProductListState extends State<ProductListHorizontal> {
 
   Widget _item(String _image, String _name, String _category, String _price,
       String _unit, BuildContext context) {
-    final shoppingCart = Provider.of<ShoppingCartProvider>(context);
+    final shoppingCart =
+        Provider.of<ShoppingCartProvider>(context, listen: false);
 
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 5.0),

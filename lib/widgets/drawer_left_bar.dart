@@ -20,8 +20,10 @@ class _DrawerLeftBarState extends State<DrawerLeftBar> {
 
   @override
   Widget build(BuildContext context) {
-    final shoppingCart = Provider.of<ShoppingCartProvider>(context);
-    final LoginProvider loginProvider = Provider.of<LoginProvider>(context);
+    final shoppingCart =
+        Provider.of<ShoppingCartProvider>(context, listen: false);
+    final LoginProvider loginProvider =
+        Provider.of<LoginProvider>(context, listen: false);
 
     return Drawer(
       child: ListView(

@@ -19,7 +19,7 @@ class _ProductListState extends State<ProductListVertical> {
   @override
   Widget build(BuildContext context) {
     final ShoppingCartProvider shoppingCart =
-        Provider.of<ShoppingCartProvider>(context);
+        Provider.of<ShoppingCartProvider>(context, listen: false);
 
     setState(() {
       DatabaseReference productRef =
@@ -72,7 +72,6 @@ class _ProductListState extends State<ProductListVertical> {
                       productList[index].category,
                       productList[index].price,
                       productList[index].unit,
-                      context,
                       shoppingCart);
                 },
               ),
@@ -81,7 +80,7 @@ class _ProductListState extends State<ProductListVertical> {
   }
 
   Widget _item(String _image, String _name, String _category, String _price,
-      String _unit, BuildContext context, ShoppingCartProvider shoppingCart) {
+      String _unit, ShoppingCartProvider shoppingCart) {
     return Column(
       children: <Widget>[
         MaterialButton(

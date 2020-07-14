@@ -11,7 +11,8 @@ class MyAccountPage extends StatefulWidget {
 class _MyAccountPageState extends State<MyAccountPage> {
   @override
   Widget build(BuildContext context) {
-    final LoginProvider loginProvider = Provider.of<LoginProvider>(context);
+    final LoginProvider loginProvider =
+        Provider.of<LoginProvider>(context, listen: false);
 
     return Selector<LoginProvider, bool>(
       selector: (_, LoginProvider loginProvider) =>

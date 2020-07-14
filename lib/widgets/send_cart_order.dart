@@ -5,7 +5,8 @@ import 'package:provider/provider.dart';
 class SendCartOrder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final shoppingCart = Provider.of<ShoppingCartProvider>(context);
+    final shoppingCart =
+        Provider.of<ShoppingCartProvider>(context, listen: false);
 
     return BottomAppBar(
       child: MaterialButton(

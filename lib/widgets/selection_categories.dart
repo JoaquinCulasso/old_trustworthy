@@ -14,7 +14,7 @@ class _SelectionCategoriesState extends State<SelectionCategories> {
   @override
   Widget build(BuildContext context) {
     final CategoryProvider categoryProvider =
-        Provider.of<CategoryProvider>(context);
+        Provider.of<CategoryProvider>(context, listen: false);
 
     return Padding(
       padding: const EdgeInsets.all(10.0),
