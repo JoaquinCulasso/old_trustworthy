@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:old_trustworthy/views/products_cart_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:old_trustworthy/providers/category_provider.dart';
@@ -69,6 +70,7 @@ class MyApp extends StatelessWidget {
             '/administration': (context) => MyAdministrationPage(),
             '/login': (context) => MyAdministrationPage(),
             '/massiveMessage': (context) => MassiveMessagePage(),
+            '/cart': (context) => MyProductsCartPage(),
             '/modifyDelete': (context) => ModifyDeleteProductPage(),
             '/productLoading': (context) => ProductLoadingFormPage()
           },
