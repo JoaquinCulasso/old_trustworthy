@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-//firebase
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
 //upload image
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+
+//provider
+import 'package:old_trustworthy/providers/database_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductLoadingFormPage extends StatefulWidget {
   @override
@@ -22,30 +20,33 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   String _unit;
   String _category;
 
-  String url; // url de la imagen
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final databaseProvider = Provider.of<DatabaseProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Cargar producto"),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/vieja_confiable.png'),
-              fit: BoxFit.cover,
+      body: Builder(
+        builder: (context) => (SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/vieja_confiable.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: productImage == null
+                  ? Text("Selecciona una imagen del telefono")
+                  : enableUpload(databaseProvider, context),
             ),
           ),
-          child: Center(
-            child: productImage == null
-                ? Text("Selecciona una imagen del telefono")
-                : enableUpload(),
-          ),
-        ),
+        )),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
@@ -62,7 +63,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
     });
   }
 
-  Widget enableUpload() {
+  Widget enableUpload(DatabaseProvider databaseProvider, BuildContext context) {
     var _categoryList = [
       'Carnes',
       'Congelados',
@@ -113,13 +114,10 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
                   if (price.isEmpty) {
                     return "precio es requerido";
                   } else if (double.tryParse(price) == null) {
-                    return "Solo numeros y los decimales con .";
+                    return "Solo numeros";
                   } else {
                     return null;
                   }
-                  // return price.isEmpty
-                  //     ? "Precio es requerido"
-                  //     : null;
                 },
                 onSaved: (price) {
                   return _price = price;
@@ -176,18 +174,25 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
                 },
               ),
               SizedBox(height: 15.0),
-              RaisedButton(
-                elevation: 10.0,
-                padding: EdgeInsets.all(12),
-                child: Text(
-                  "Agregar Producto",
-                  style: TextStyle(fontSize: 25),
-                  textAlign: TextAlign.center,
-                ),
-                textColor: Colors.white,
-                color: Color.fromRGBO(47, 87, 44, 1.0),
-                onPressed: uploadStatusImage,
-              )
+              databaseProvider.databaseState.isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : RaisedButton(
+                      elevation: 10.0,
+                      padding: EdgeInsets.all(12),
+                      child: Text(
+                        "Agregar Producto",
+                        style: TextStyle(fontSize: 25),
+                        textAlign: TextAlign.center,
+                      ),
+                      textColor: Colors.white,
+                      color: Color.fromRGBO(47, 87, 44, 1.0),
+                      onPressed: () {
+                        if (validateAndSave()) {
+                          databaseProvider.loadProduct(productImage, _name,
+                              _price, _unit, _category, context);
+                        }
+                      }, //uploadStatusImage,
+                    ),
             ],
           ),
         ),
@@ -195,55 +200,64 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
     ));
   }
 
-  void uploadStatusImage() async {
-    if (validateAndSave()) {
-      // Subir imagen a firebase storage
-      final StorageReference postImageRef =
-          FirebaseStorage.instance.ref().child("Vieja_Confiable");
-      var timeKey = DateTime.now();
-
-      final StorageUploadTask uploadTask =
-          postImageRef.child(timeKey.toString() + ".jpg").putFile(productImage);
-
-      //recupero la url
-      var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      url = imageUrl.toString();
-      print("Image url: " + url);
-
-      // Guardar el post a firebase database: database realtime
-      saveToDatabase(url);
-
-      //vamos a probar guardar los datos a cloud firestore
-      // saveToFirestore(url);
-
-      //vuelvo a la vista de administracion
-      Navigator.pop(context);
+  bool validateAndSave() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
     }
   }
+  // void uploadStatusImage() async {
+  //   if (validateAndSave()) {
+  //     // Subir imagen a firebase storage
+  //     final StorageReference postImageRef =
+  //         FirebaseStorage.instance.ref().child("Vieja_Confiable");
+  //     var timeKey = DateTime.now();
 
-  void saveToDatabase(String url) {
-    // Save to Firebase Database Realtime (image, name, price, unit, category, date, time)
-    var dbTimeKey = DateTime.now();
-    var formatDate = DateFormat('MMM d, yyyy');
-    var formatTime = DateFormat('EEEE, hh:mm aaa');
+  //     final StorageUploadTask uploadTask =
+  //         postImageRef.child(timeKey.toString() + ".jpg").putFile(productImage);
 
-    String date = formatDate.format(dbTimeKey);
-    String time = formatTime.format(dbTimeKey);
+  //     //recupero la url
+  //     var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+  //     url = imageUrl.toString();
+  //     print("Image url: " + url);
 
-    DatabaseReference ref = FirebaseDatabase.instance.reference();
+  //     // Guardar el post a firebase database: database realtime
+  //     saveToDatabase(url);
 
-    var data = {
-      "image": url,
-      "name": _name,
-      "price": _price,
-      "unit": _unit,
-      "category": _category,
-      "date": date,
-      "time": time
-    };
-    //push to data
-    ref.child("Vieja_Confiable").push().set(data);
-  }
+  //     //vamos a probar guardar los datos a cloud firestore
+  //     // saveToFirestore(url);
+
+  //     //vuelvo a la vista de administracion
+  //     Navigator.pop(context);
+  //   }
+  // }
+
+  // void saveToDatabase(String url) {
+  //   // Save to Firebase Database Realtime (image, name, price, unit, category, date, time)
+  //   var dbTimeKey = DateTime.now();
+  //   var formatDate = DateFormat('MMM d, yyyy');
+  //   var formatTime = DateFormat('EEEE, hh:mm aaa');
+
+  //   String date = formatDate.format(dbTimeKey);
+  //   String time = formatTime.format(dbTimeKey);
+
+  //   DatabaseReference ref = FirebaseDatabase.instance.reference();
+
+  //   var data = {
+  //     "image": url,
+  //     "name": _name,
+  //     "price": _price,
+  //     "unit": _unit,
+  //     "category": _category,
+  //     "date": date,
+  //     "time": time
+  //   };
+  //   //push to data
+  //   ref.child("Vieja_Confiable").push().set(data);
+  // }
 
   // void saveToFirestore(String url) {
   //   // Guardar un post (image, descripcion, date, time)
@@ -270,16 +284,6 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
   //   //save to cloudfirestore
   //   ref.setData(data);
   // }
-
-  bool validateAndSave() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    } else {
-      return false;
-    }
-  }
 }
 
 // import 'package:flutter/material.dart';
