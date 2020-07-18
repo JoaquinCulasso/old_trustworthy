@@ -17,6 +17,7 @@ class DatabaseProvider with ChangeNotifier {
   final DatabaseReference _databaseRef =
       FirebaseDatabase.instance.reference().child("Vieja_Confiable");
 
+  //database state
   final DatabaseState _databaseState = DatabaseState();
 
   DatabaseState get databaseState => this._databaseState;
@@ -25,11 +26,11 @@ class DatabaseProvider with ChangeNotifier {
       String unit, String category, context) async {
     _databaseState.loading();
     notifyListeners();
-    try {
-      String _url = await loadImageStorage(productImage);
-      loadDataDb(_url, name, price, unit, category);
-    } catch (lasError) {
-      _databaseState.error(lasError);
+
+    String _url = await loadImageStorage(productImage);
+
+    if (_url != null) {
+      await loadDataDb(_url, name, price, unit, category);
     }
 
     _databaseState.isLoaded
@@ -54,11 +55,8 @@ class DatabaseProvider with ChangeNotifier {
         .getStorage()
         .getReferenceFromUrl(product.image)
         .then((value) => value.delete())
-        .whenComplete(() => _databaseState.loaded())
-        .catchError((lastError) =>
-            _databaseState.error('Error eliminado imagen: ' + lastError));
-
-    notifyListeners();
+        .catchError((lastError) => _databaseState
+            .error('Error eliminando imagen: ' + lastError.toString()));
   }
 
   //load image storage
@@ -107,6 +105,7 @@ class DatabaseProvider with ChangeNotifier {
     } catch (lastError) {
       _databaseState
           .error('Error subiendo datos producto: ' + lastError.toString());
+      deleteImageStorage(Product(_name, _price, _unit, _category, _url));
     }
   }
 
