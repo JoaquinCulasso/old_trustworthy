@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:old_trustworthy/views/products_cart_page.dart';
 import 'package:provider/provider.dart';
 
 import 'package:old_trustworthy/providers/category_provider.dart';
 import 'package:old_trustworthy/providers/login_provider.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
+import 'package:old_trustworthy/providers/database_provider.dart';
 
 import 'package:old_trustworthy/views/home_page.dart';
 import 'package:old_trustworthy/views/account_page.dart';
@@ -25,7 +27,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => ShoppingCartProvider()),
           ChangeNotifierProvider(create: (context) => LoginProvider()),
           ChangeNotifierProvider(create: (context) => CategoryProvider()),
-
+          ChangeNotifierProvider(create: (context) => DatabaseProvider()),
           // ChangeNotifierProvider(
           //   create: (context) => LoginProvider(),
           //   builder: (BuildContext context, Widget child) {
