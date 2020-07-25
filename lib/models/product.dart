@@ -1,5 +1,5 @@
 class Product {
-  String _name, _price, _category, _unit, _image;
+  String _name, _price, _unit, _category, _image;
   int _count = 0;
 
   // Product(this._name, this._price, this._category, this._unit, this._image);

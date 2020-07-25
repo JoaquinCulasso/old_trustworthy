@@ -29,7 +29,7 @@ class DatabaseProvider with ChangeNotifier {
 
     String _url = await loadImageStorage(productImage);
 
-    if (_url != null) {
+    if (!_databaseState.hasError) {
       await loadDataDb(_url, name, price, unit, category);
     }
 
@@ -43,20 +43,44 @@ class DatabaseProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // void updateProduct(File productImage, String name, String price, String unit,
-  //     String category) {
-  //   _url = loadImageStorage(productImage);
-  //   loadDataDb(_url, name, price, unit, category);
-  //   notifyListeners();
-  // }
+  Future<void> updateProduct(
+      Product product, File productImage, BuildContext context) async {
+    String url;
+    _databaseState.loading();
+    notifyListeners();
 
-  void deleteImageStorage(Product product) {
-    _imageRef
-        .getStorage()
-        .getReferenceFromUrl(product.image)
-        .then((value) => value.delete())
-        .catchError((lastError) => _databaseState
-            .error('Error eliminando imagen: ' + lastError.toString()));
+    if (productImage != null) {
+      await deleteImageStorage(product);
+      url = await loadImageStorage(productImage);
+    } else {
+      url = product.image;
+    }
+
+    if (!_databaseState.hasError) {
+      await updateDataDb(url, product.image, product.name, product.price,
+          product.unit, product.category);
+    }
+
+    //ver la navegacion
+    _databaseState.isLoaded
+        ? Navigator.of(context).pushReplacementNamed('/modifyDelete')
+        : WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+            Scaffold.of(context).showSnackBar(SnackBar(
+                duration: Duration(seconds: 8),
+                content: Text(_databaseState.lastError)));
+          });
+    notifyListeners();
+  }
+
+  Future<void> deleteImageStorage(Product product) async {
+    try {
+      await _imageRef
+          .getStorage()
+          .getReferenceFromUrl(product.image)
+          .then((value) => value.delete());
+    } catch (lastError) {
+      _databaseState.error('Error eliminando imagen: ' + lastError.toString());
+    }
   }
 
   //load image storage
@@ -105,13 +129,12 @@ class DatabaseProvider with ChangeNotifier {
     } catch (lastError) {
       _databaseState
           .error('Error subiendo datos producto: ' + lastError.toString());
-      deleteImageStorage(Product(_name, _price, _unit, _category, _url));
+      await deleteImageStorage(Product(_name, _price, _unit, _category, _url));
     }
   }
 
-  Future<void> updateDataDb(String _url, String _name, String _price,
-      String _unit, String _category) async {
-    _databaseState.loading();
+  Future<void> updateDataDb(String _newUrl, String _oldUrl, String _name,
+      String _price, String _unit, String _category) async {
     // update post (image, name, price, unit, category, date, time)
     var dbTimeKey = DateTime.now();
     var formatDate = DateFormat('MMM d, yyyy');
@@ -121,7 +144,7 @@ class DatabaseProvider with ChangeNotifier {
     String time = formatTime.format(dbTimeKey);
 
     var data = {
-      "image": _url,
+      "image": _newUrl,
       "name": _name,
       "price": _price,
       "unit": _unit,
@@ -130,21 +153,36 @@ class DatabaseProvider with ChangeNotifier {
       "time": time
     };
 
-    _databaseRef
-        .orderByChild('image')
-        .equalTo(_url)
-        .onChildAdded
-        .listen((event) {
-      FirebaseDatabase.instance
-          .reference()
-          .child('Vieja_Confiable')
-          .child(event.snapshot.key)
-          .update(data)
-          .then((value) => value)
-          .whenComplete(() => _databaseState.loaded())
-          .catchError((lastError) => _databaseState.error(
-              'Error actualizando datos productos: ' + lastError.toString()));
-    });
-    notifyListeners();
+    try {
+      _databaseRef
+          .orderByChild('image')
+          .equalTo(_oldUrl)
+          .onChildAdded
+          .listen((event) {
+        _databaseRef.child(event.snapshot.key).update(data);
+        // .then((value) => value);
+      });
+      _databaseState.loaded();
+    } catch (lastError) {
+      _databaseState
+          .error('Error actualizando datos productos: ' + lastError.toString());
+    }
+
+    // _databaseRef
+    //     .orderByChild('image')
+    //     .equalTo(_url)
+    //     .onChildAdded
+    //     .listen((event) {
+
+    //   FirebaseDatabase.instance
+    //       .reference()
+    //       .child('Vieja_Confiable')
+    //       .child(event.snapshot.key)
+    //       .update(data)
+    //       .then((value) => value)
+    //       .whenComplete(() => _databaseState.loaded())
+    //       .catchError((lastError) => _databaseState.error(
+    //           'Error actualizando datos productos: ' + lastError.toString()));
+    // });
   }
 }
