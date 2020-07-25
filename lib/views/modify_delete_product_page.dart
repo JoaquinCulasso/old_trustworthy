@@ -15,7 +15,7 @@ class ModifyDeleteProductPage extends StatefulWidget {
 
 class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
   List productList = [];
-
+//TODO ver q no se refresca cuando vuelve de modificar a la vista de lista
   @override
   void initState() {
     super.initState();
@@ -187,6 +187,7 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                 color: Color.fromRGBO(47, 87, 44, 1.0),
                 child: Text('Aceptar', style: TextStyle(fontSize: 20)),
                 onPressed: () {
+                  //TODO ver la nagegacion
                   setState(() {
                     Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
@@ -194,6 +195,9 @@ class _ModifyDeleteProductPageState extends State<ModifyDeleteProductPage> {
                               ProductUpdateFormPage(product: product)),
                       ModalRoute.withName('/modifyDelete'),
                     );
+                    // Navigator.of(context).pushReplacement(MaterialPageRoute(
+                    //     builder: (BuildContext context) =>
+                    //         ProductUpdateFormPage(product: product)));
                   });
                 },
               ),
