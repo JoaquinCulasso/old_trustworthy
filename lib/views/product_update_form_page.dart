@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 
 //firebase
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_database/firebase_database.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 
 //upload image
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
+// import 'package:intl/intl.dart';
 import 'package:old_trustworthy/models/product.dart';
+import 'package:old_trustworthy/providers/database_provider.dart';
+import 'package:provider/provider.dart';
 
 class ProductUpdateFormPage extends StatefulWidget {
   final Product product;
@@ -21,9 +23,13 @@ class ProductUpdateFormPage extends StatefulWidget {
 
 class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
   File productImage;
+  // ignore: unused_field
   String _name;
+  // ignore: unused_field
   String _price;
+  // ignore: unused_field
   String _unit;
+  // ignore: unused_field
   String _category;
 
   String url;
@@ -31,25 +37,29 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final databaseProvider = Provider.of<DatabaseProvider>(context);
+
     return Scaffold(
       appBar: AppBar(
         title: Text("Actualizar producto"),
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/vieja_confiable.png'),
-              fit: BoxFit.cover,
+      body: Builder(
+        builder: (context) => (SafeArea(
+          child: Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage('assets/images/vieja_confiable.png'),
+                fit: BoxFit.cover,
+              ),
+            ),
+            child: Center(
+              child: widget.product.image == null
+                  ? Text("Selecciona una imagen del telefono")
+                  : enableUpload(databaseProvider, context),
             ),
           ),
-          child: Center(
-            child: widget.product.image == null
-                ? Text("Selecciona una imagen del telefono")
-                : enableUpload(),
-          ),
-        ),
+        )),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: getImage,
@@ -66,15 +76,16 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
     });
   }
 
-  Widget enableUpload() {
+  Widget enableUpload(DatabaseProvider databaseProvider, BuildContext context) {
     var _categoryList = [
-      'Verdura',
-      'Carne',
-      'Fiambre',
+      'Carnes',
       'Congelados',
-      'Fruta',
+      'Frutas',
+      'Lacteos fiambres',
+      'Verduras',
+      'Limpieza',
       'Higiene personal',
-      'Limpieza'
+      'Almacen',
     ];
     var _unitList = ['KG', '100gr', 'Unidad'];
     var _valueCategorySelected = widget.product.category;
@@ -166,20 +177,36 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
                   });
                 },
                 validator: (category) {
-                  return category == null ? "Etiqueta es requerido" : null;
+                  return category == null ? "Categoria es requerido" : null;
                 },
                 onSaved: (category) {
                   return _category = category;
                 },
               ),
               SizedBox(height: 15.0),
-              RaisedButton(
-                elevation: 10.0,
-                child: Text("Actualizar Producto"),
-                textColor: Colors.white,
-                color: Color.fromRGBO(47, 87, 44, 1.0),
-                onPressed: uploadStatusImage,
-              )
+              databaseProvider.databaseState.isLoading
+                  ? Center(child: CircularProgressIndicator())
+                  : RaisedButton(
+                      elevation: 10.0,
+                      child: Text(
+                        "Actualizar Producto",
+                        style: TextStyle(fontSize: 25),
+                        textAlign: TextAlign.center,
+                      ),
+                      padding: EdgeInsets.all(12),
+                      textColor: Colors.white,
+                      color: Color.fromRGBO(47, 87, 44, 1.0),
+                      onPressed: () {
+                        if (validateAndSave()) {
+                          databaseProvider.updateProduct(
+                              Product(_name, _price, _category, _unit,
+                                  widget.product.image),
+                              productImage,
+                              context);
+                        }
+                      }
+                      //  uploadStatusImage,
+                      )
             ],
           ),
         ),
@@ -187,85 +214,84 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
     ));
   }
 
-  void uploadStatusImage() async {
-    if (validateAndSave()) {
-      //delete image and update if new image
-      if (productImage == null) {
-        url = widget.product.image;
-        print('current image');
-      } else {
-        FirebaseStorage.instance
-            .ref()
-            .child("Vieja_Confiable")
-            .getStorage()
-            .getReferenceFromUrl(widget.product.image)
-            .then((value) => value.delete());
+  // void uploadStatusImage() async {
+  //   if (validateAndSave()) {
+  //     //delete image and update if new image
+  //     if (productImage == null) {
+  //       url = widget.product.image;
+  //       print('current image');
+  //     } else {
+  //       FirebaseStorage.instance
+  //           .ref()
+  //           .child("Vieja_Confiable")
+  //           .getStorage()
+  //           .getReferenceFromUrl(widget.product.image)
+  //           .then((value) => value.delete());
 
-        // Subir imagen a firebase
-        final StorageReference postImageRef =
-            FirebaseStorage.instance.ref().child("Vieja_Confiable");
+  //       // Subir imagen a firebase
+  //       final StorageReference postImageRef =
+  //           FirebaseStorage.instance.ref().child("Vieja_Confiable");
 
-        var timeKey = DateTime.now();
+  //       var timeKey = DateTime.now();
 
-        //Actualizo la img en data storage
+  //       //load img with ext .jpg and time
+  //       final StorageUploadTask uploadTask = postImageRef
+  //           .child(timeKey.toString() + ".jpg")
+  //           .putFile(productImage);
 
-        final StorageUploadTask uploadTask = postImageRef
-            .child(timeKey.toString() + ".jpg")
-            .putFile(productImage);
+  //       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
+  //       url = imageUrl.toString();
+  //       print("Image url: " + url);
 
-        var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-        url = imageUrl.toString();
-        print("Image url: " + url);
+  //       // Guardar el post a firebase database: database realtime
 
-        // Guardar el post a firebase database: database realtime
+  //     }
 
-      }
+  //     saveToDatabase(url);
+  //     //vamos a probar guardar los datos a cloud firestore
+  //     // saveToFirestore(url);
 
-      saveToDatabase(url);
-      //vamos a probar guardar los datos a cloud firestore
-      // saveToFirestore(url);
+  //     //vuelvo a la vista de modificar o eliminar producto
+  //     Navigator.pop(context);
+  //   }
+  // }
 
-      //vuelvo a la vista de modificar o eliminar producto
-      Navigator.pop(context);
-    }
-  }
+  // void saveToDatabase(String url) {
+  //   // Guardar un post (image, name, price, unit, category, date, time)
+  //   var dbTimeKey = DateTime.now();
+  //   var formatDate = DateFormat('MMM d, yyyy');
+  //   var formatTime = DateFormat('EEEE, hh:mm aaa');
 
-  void saveToDatabase(String url) {
-    // Guardar un post (image, descripcion, date, time)
-    var dbTimeKey = DateTime.now();
-    var formatDate = DateFormat('MMM d, yyyy');
-    var formatTime = DateFormat('EEEE, hh:mm aaa');
+  //   String date = formatDate.format(dbTimeKey);
+  //   String time = formatTime.format(dbTimeKey);
 
-    String date = formatDate.format(dbTimeKey);
-    String time = formatTime.format(dbTimeKey);
+  //   var data = {
+  //     "image": url,
+  //     "name": _name,
+  //     "price": _price,
+  //     "unit": _unit,
+  //     "category": _category,
+  //     "date": date,
+  //     "time": time
+  //   };
 
-    var data = {
-      "image": url,
-      "name": _name,
-      "price": _price,
-      "unit": _unit,
-      "category": _category,
-      "date": date,
-      "time": time
-    };
-
-    FirebaseDatabase.instance
-        .reference()
-        .child('Vieja_Confiable')
-        .orderByChild('image')
-        .equalTo(widget.product.image)
-        .onChildAdded
-        .listen((event) {
-      FirebaseDatabase.instance
-          .reference()
-          .child('Vieja_Confiable')
-          .child(event.snapshot.key)
-          .update(data);
-    }, onError: (Object o) {
-      final DatabaseError error = o;
-      print('Error: ${error.code} ${error.message}');
-    });
-  }
+  //   FirebaseDatabase.instance
+  //       .reference()
+  //       .child('Vieja_Confiable')
+  //       .orderByChild('image')
+  //       .equalTo(widget.product.image)
+  //       .onChildAdded
+  //       .listen((event) {
+  //     FirebaseDatabase.instance
+  //         .reference()
+  //         .child('Vieja_Confiable')
+  //         .child(event.snapshot.key)
+  //         .update(data);
+  //   }, onError: (Object o) {
+  //     final DatabaseError error = o;
+  //     print('Error: ${error.code} ${error.message}');
+  //   });
+  // }
 
   bool validateAndSave() {
     final form = formKey.currentState;
