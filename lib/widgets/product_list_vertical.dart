@@ -44,10 +44,10 @@ class _ProductListState extends State<ProductListVertical> {
 
           productList.add(products);
         }
-
-        setState(() {
-          print('Length: $productList.length');
-        });
+        productList.length;
+        // setState(() {
+        print('Length: $productList.length');
+        // });
       });
     });
 
