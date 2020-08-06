@@ -204,14 +204,22 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
                               productImage,
                               context);
                         }
-                      }
-                      //  uploadStatusImage,
-                      )
+                      })
             ],
           ),
         ),
       ),
     ));
+  }
+
+  bool validateAndSave() {
+    final form = formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    } else {
+      return false;
+    }
   }
 
   // void uploadStatusImage() async {
@@ -293,15 +301,6 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
   //   });
   // }
 
-  bool validateAndSave() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    } else {
-      return false;
-    }
-  }
 }
 
 // import 'package:flutter/material.dart';
