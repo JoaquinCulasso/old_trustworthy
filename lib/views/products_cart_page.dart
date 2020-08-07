@@ -59,7 +59,7 @@ class MyProductsCartPage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               Container(
-                height: 150.0,
+                height: 160.0,
                 width: 215.0,
                 child: Column(
                   children: <Widget>[
