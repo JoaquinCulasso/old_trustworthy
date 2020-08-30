@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
 
-//firebase
-// import 'package:firebase_database/firebase_database.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-
-//upload image
 import 'package:image_picker/image_picker.dart';
-// import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:old_trustworthy/models/product.dart';
 import 'package:old_trustworthy/providers/database_provider.dart';
-import 'package:provider/provider.dart';
 
 class ProductUpdateFormPage extends StatefulWidget {
   final Product product;
@@ -23,22 +16,10 @@ class ProductUpdateFormPage extends StatefulWidget {
 
 class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
   File productImage;
-  // ignore: unused_field
-  String _name;
-  // ignore: unused_field
-  String _price;
-  // ignore: unused_field
-  String _unit;
-  // ignore: unused_field
-  String _category;
-
-  String url;
   final formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
-    final databaseProvider = Provider.of<DatabaseProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Actualizar producto"),
@@ -56,7 +37,11 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
             child: Center(
               child: widget.product.image == null
                   ? Text("Selecciona una imagen del telefono")
-                  : enableUpload(databaseProvider, context),
+                  : EnableUpload(
+                      product: widget.product,
+                      productImage: productImage,
+                      formKey: formKey,
+                    ),
             ),
           ),
         )),
@@ -71,12 +56,32 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
 
   Future getImage() async {
     var tempImage = await ImagePicker.pickImage(source: ImageSource.gallery);
+
     setState(() {
       productImage = tempImage;
     });
   }
+}
 
-  Widget enableUpload(DatabaseProvider databaseProvider, BuildContext context) {
+class EnableUpload extends StatefulWidget {
+  final Product product;
+  final File productImage;
+  final GlobalKey<FormState> formKey;
+  EnableUpload({Key key, this.product, this.productImage, this.formKey})
+      : super(key: key);
+
+  @override
+  _EnableUploadState createState() => _EnableUploadState();
+}
+
+class _EnableUploadState extends State<EnableUpload> {
+  @override
+  Widget build(BuildContext context) {
+    String _name;
+    String _price;
+    String _unit;
+    String _category;
+
     var _categoryList = [
       'Carnes',
       'Congelados',
@@ -88,25 +93,23 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
       'Almacen',
     ];
     var _unitList = ['KG', '100gr', 'Unidad'];
-    var _valueCategorySelected = widget.product.category;
-    var _valueUnitSelected = widget.product.unit;
 
     return SingleChildScrollView(
         child: Container(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
-          key: formKey,
+          key: widget.formKey,
           child: Column(
             children: <Widget>[
-              productImage == null
+              widget.productImage == null
                   ? Image.network(
                       widget.product.image,
                       height: 300.0,
                       width: 600.0,
                     )
                   : Image.file(
-                      productImage,
+                      widget.productImage,
                       height: 300.0,
                       width: 600.0,
                     ),
@@ -135,7 +138,7 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
               ),
               SizedBox(height: 15.0),
               DropdownButtonFormField(
-                value: _valueUnitSelected,
+                value: widget.product.unit,
                 hint: Text('Selecciona una unidad'),
                 items: _unitList
                     .map((String unitSelected) => DropdownMenuItem<String>(
@@ -148,7 +151,7 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
                     .toList(),
                 onChanged: (val) {
                   setState(() {
-                    _valueUnitSelected = val;
+                    _unit = val;
                   });
                 },
                 validator: (unit) {
@@ -160,7 +163,7 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
               ),
               SizedBox(height: 15.0),
               DropdownButtonFormField(
-                value: _valueCategorySelected,
+                value: widget.product.category,
                 hint: Text('Selecciona una categoria'),
                 items: _categoryList
                     .map((String categorySelected) => DropdownMenuItem<String>(
@@ -184,221 +187,40 @@ class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
                 },
               ),
               SizedBox(height: 15.0),
-              databaseProvider.databaseState.isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : RaisedButton(
-                      elevation: 10.0,
-                      child: Text(
-                        "Actualizar Producto",
-                        style: TextStyle(fontSize: 25),
-                        textAlign: TextAlign.center,
-                      ),
-                      padding: EdgeInsets.all(12),
-                      textColor: Colors.white,
-                      color: Color.fromRGBO(47, 87, 44, 1.0),
-                      onPressed: () {
-                        if (validateAndSave()) {
-                          databaseProvider.updateProduct(
+              RaisedButton(
+                  elevation: 10.0,
+                  child: Text(
+                    "Actualizar Producto",
+                    style: TextStyle(fontSize: 25),
+                    textAlign: TextAlign.center,
+                  ),
+                  padding: EdgeInsets.all(12),
+                  textColor: Colors.white,
+                  color: Color.fromRGBO(47, 87, 44, 1.0),
+                  onPressed: () {
+                    if (validateAndSave(widget.formKey)) {
+                      Provider.of<DatabaseProvider>(context, listen: false)
+                          .updateProduct(
                               Product(_name, _price, _category, _unit,
                                   widget.product.image),
-                              productImage,
+                              widget.productImage,
                               context);
-                        }
-                      })
+                    }
+                  }),
             ],
           ),
         ),
       ),
     ));
   }
-
-  bool validateAndSave() {
-    final form = formKey.currentState;
-    if (form.validate()) {
-      form.save();
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  // void uploadStatusImage() async {
-  //   if (validateAndSave()) {
-  //     //delete image and update if new image
-  //     if (productImage == null) {
-  //       url = widget.product.image;
-  //       print('current image');
-  //     } else {
-  //       FirebaseStorage.instance
-  //           .ref()
-  //           .child("Vieja_Confiable")
-  //           .getStorage()
-  //           .getReferenceFromUrl(widget.product.image)
-  //           .then((value) => value.delete());
-
-  //       // Subir imagen a firebase
-  //       final StorageReference postImageRef =
-  //           FirebaseStorage.instance.ref().child("Vieja_Confiable");
-
-  //       var timeKey = DateTime.now();
-
-  //       //load img with ext .jpg and time
-  //       final StorageUploadTask uploadTask = postImageRef
-  //           .child(timeKey.toString() + ".jpg")
-  //           .putFile(productImage);
-
-  //       var imageUrl = await (await uploadTask.onComplete).ref.getDownloadURL();
-  //       url = imageUrl.toString();
-  //       print("Image url: " + url);
-
-  //       // Guardar el post a firebase database: database realtime
-
-  //     }
-
-  //     saveToDatabase(url);
-  //     //vamos a probar guardar los datos a cloud firestore
-  //     // saveToFirestore(url);
-
-  //     //vuelvo a la vista de modificar o eliminar producto
-  //     Navigator.pop(context);
-  //   }
-  // }
-
-  // void saveToDatabase(String url) {
-  //   // Guardar un post (image, name, price, unit, category, date, time)
-  //   var dbTimeKey = DateTime.now();
-  //   var formatDate = DateFormat('MMM d, yyyy');
-  //   var formatTime = DateFormat('EEEE, hh:mm aaa');
-
-  //   String date = formatDate.format(dbTimeKey);
-  //   String time = formatTime.format(dbTimeKey);
-
-  //   var data = {
-  //     "image": url,
-  //     "name": _name,
-  //     "price": _price,
-  //     "unit": _unit,
-  //     "category": _category,
-  //     "date": date,
-  //     "time": time
-  //   };
-
-  //   FirebaseDatabase.instance
-  //       .reference()
-  //       .child('Vieja_Confiable')
-  //       .orderByChild('image')
-  //       .equalTo(widget.product.image)
-  //       .onChildAdded
-  //       .listen((event) {
-  //     FirebaseDatabase.instance
-  //         .reference()
-  //         .child('Vieja_Confiable')
-  //         .child(event.snapshot.key)
-  //         .update(data);
-  //   }, onError: (Object o) {
-  //     final DatabaseError error = o;
-  //     print('Error: ${error.code} ${error.message}');
-  //   });
-  // }
-
 }
 
-// import 'package:flutter/material.dart';
-// import 'package:old_trustworthy/views/ProductUpdateFormPage.dart';
-
-// class ProductUpdateFormPage extends StatefulWidget {
-//   @override
-//   _ProductUpdateFormPageState createState() => _ProductUpdateFormPageState();
-// }
-
-// class _ProductUpdateFormPageState extends State<ProductUpdateFormPage> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Carga de producto'),
-//       ),
-//       body: Padding(
-//         padding: const EdgeInsets.all(16.0),
-//         child: ListView(
-//           children: <Widget>[
-//             Form(
-//               child: Column(
-//                 children: <Widget>[
-//                   TextField(
-//                     decoration: InputDecoration(
-//                       labelText: 'Nombre producto',
-//                     ),
-//                   ),
-//                   TextField(
-//                     decoration: InputDecoration(
-//                       labelText: 'Precio',
-//                     ),
-//                   ),
-//                   TextField(
-//                     decoration: InputDecoration(
-//                       labelText: 'Unidad',
-//                     ),
-//                   ),
-//                   TextField(
-//                     decoration: InputDecoration(
-//                       labelText: 'Etiqueta',
-//                     ),
-//                   ),
-//                   Row(
-//                     mainAxisAlignment: MainAxisAlignment.center,
-//                     mainAxisSize: MainAxisSize.max,
-//                     children: <Widget>[
-//                       Text(
-//                         'Subir Foto',
-//                         style: TextStyle(
-//                           fontSize: 20.0,
-//                           fontWeight: FontWeight.bold,
-//                         ),
-//                       ),
-//                       IconButton(
-//                         icon: Icon(
-//                           Icons.add_a_photo,
-//                         ),
-//                         iconSize: 40,
-//                         color: Colors.green,
-//                         onPressed: () {
-//                           Navigator.push(
-//                             context,
-//                             MaterialPageRoute(
-//                               builder: (context) {
-//                                 return ProductUpdateFormPage();
-//                               },
-//                             ),
-//                           );
-//                         },
-//                       )
-//                     ],
-//                   ),
-//                   // TextField(
-//                   //   decoration: InputDecoration(
-//                   //     labelText: 'Imagen',
-//                   //   ),
-//                   // ),
-//                   Container(
-//                     margin: EdgeInsets.all(20),
-//                     decoration: BoxDecoration(
-//                       color: Colors.green,
-//                     ),
-//                     child: MaterialButton(
-//                       child: Text(
-//                         'Continuar',
-//                         style: TextStyle(color: Colors.white, fontSize: 25.0),
-//                       ),
-//                       onPressed: () {},
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-// }
+bool validateAndSave(formKey) {
+  final form = formKey.currentState;
+  if (form.validate()) {
+    form.save();
+    return true;
+  } else {
+    return false;
+  }
+}
