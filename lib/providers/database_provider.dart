@@ -1,19 +1,22 @@
+import 'package:flutter/material.dart';
 import 'dart:io';
 
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+
 import 'package:old_trustworthy/models/product.dart';
 import 'package:old_trustworthy/state/database_state.dart';
 
 class DatabaseProvider with ChangeNotifier {
   //list of data base
   final List _productList = [];
+  final List _productListVertical = [];
 
   List get productList => this._productList;
+
+  List get productListVertical => this._productListVertical;
 
   //referende Storage
   final StorageReference _imageRef =
@@ -23,31 +26,35 @@ class DatabaseProvider with ChangeNotifier {
   final DatabaseReference _databaseRef =
       FirebaseDatabase.instance.reference().child("Vieja_Confiable");
 
-  //database state
-  final DatabaseState _databaseState = DatabaseState();
+  //database state singleton
+  final DatabaseState _databaseState = DatabaseState.instance;
 
   DatabaseState get databaseState => this._databaseState;
 
   //load pruduct to database
   Future<void> loadProduct(File productImage, String name, String price,
-      String unit, String category, context) async {
-    _databaseState.loading();
-    notifyListeners();
+      String unit, String category, BuildContext context) async {
+    //load alert in view and waiting
+    _progressAlertDialog(context, 'Cargando producto...');
 
     String _url = await loadImageStorage(productImage);
 
-    if (!_databaseState.hasError) {
+    if (!_databaseState.hasError)
       await loadDataDb(_url, name, price, unit, category);
+
+    if (!_databaseState.hasError) {
+      getDataOfDatabase();
+      Navigator.of(context).pop();
+      _databaseState.loaded();
     }
 
-    _databaseState.isLoaded
-        ? Navigator.pop(context)
-        : WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-            Scaffold.of(context).showSnackBar(SnackBar(
-                duration: Duration(seconds: 8),
-                content: Text(_databaseState.lastError)));
-          });
-    getDataOfDatabase();
+    if (_databaseState.isLoaded) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pop();
+      _snackBarError(context);
+    }
+
     notifyListeners();
   }
 
@@ -56,8 +63,11 @@ class DatabaseProvider with ChangeNotifier {
       Product product, File productImage, BuildContext context) async {
     String url;
     _databaseState.loading();
-    notifyListeners();
 
+    //load alert in view and waiting
+    _progressAlertDialog(context, 'Actualizando...');
+
+    //if productImage is not null, load new image else use current image
     if (productImage != null) {
       await deleteImageStorage(product);
       url = await loadImageStorage(productImage);
@@ -65,55 +75,85 @@ class DatabaseProvider with ChangeNotifier {
       url = product.image;
     }
 
-    if (!_databaseState.hasError) {
+    //if not error, update data
+    if (!_databaseState.hasError)
       await updateDataDb(url, product.image, product.name, product.price,
           product.unit, product.category);
+
+    //if not error, update list product, loaded state and pop
+    if (!_databaseState.hasError) {
+      getDataOfDatabase();
+      databaseState.loaded();
+      Navigator.of(context).pop();
     }
 
-    _databaseState.isLoaded
-        ? Navigator.of(context).pop() //popAndPushNamed('/modifyDelete')
-        : _snackBarError(context);
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     Scaffold.of(context).showSnackBar(SnackBar(
-    //         duration: Duration(seconds: 8),
-    //         content: Text(_databaseState.lastError)));
-    //   });
-    getDataOfDatabase();
+    //if loaded, remove alertDialog else showing error
+    if (_databaseState.isLoaded) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pop();
+      _snackBarError(context);
+    }
     notifyListeners();
   }
 
   //delete product to database
   Future<void> deleteProduct(Product product, BuildContext context) async {
     _databaseState.loading();
-    notifyListeners();
+    //load alert in view and waiting
+    _progressAlertDialog(context, 'Eliminado...');
 
-    await deleteImageStorage(product);
+    //first: delete data of database
+    await deleteDataOfDatabase(product);
 
+    //second: if not error with data, delete image of storage
+    if (!_databaseState.hasError) await deleteImageStorage(product);
+
+    //thrid: if not error with data, get new data else load the old data
     if (!_databaseState.hasError) {
-      await deleteDataOfDatabase(product);
-    }
-    if (!_databaseState.hasError) {
-      _productList.remove(product);
+      getDataOfDatabase();
+      databaseState.loaded();
+    } else {
+      loadDataDb(product.image, product.name, product.price, product.unit,
+          product.category);
+      getDataOfDatabase();
     }
 
-    _databaseState.isLoaded
-        ? Navigator.of(context).pop()
-        : _snackBarError(context);
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    //     Scaffold.of(context).showSnackBar(SnackBar(
-    //         duration: Duration(seconds: 8),
-    //         content: Text(_databaseState.lastError)));
-    //   });
+    //fourth: if loaded, remove alertDialog else showing error
+    if (_databaseState.isLoaded) {
+      Navigator.of(context).pop();
+    } else {
+      Navigator.of(context).pop();
+      _snackBarError(context);
+    }
     notifyListeners();
   }
 
   void _snackBarError(BuildContext context) {
-    Navigator.of(context).pop();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Scaffold.of(context).showSnackBar(SnackBar(
-          duration: Duration(seconds: 8),
-          content: Text(_databaseState.lastError)));
+          duration: Duration(seconds: 3),
+          content: Text(_databaseState.lastError.toString())));
     });
+  }
+
+  Future<void> _progressAlertDialog(BuildContext context, String textTitle) {
+    return showDialog(
+      barrierDismissible: true,
+      context: context,
+      builder: (_) {
+        return Center(
+          child: AlertDialog(
+            title: Text(textTitle, style: TextStyle(fontSize: 25)),
+            content: Center(
+              heightFactor: 1.5,
+              widthFactor: 1.5,
+              child: CircularProgressIndicator(),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   //delete image of storage
@@ -126,6 +166,7 @@ class DatabaseProvider with ChangeNotifier {
     } catch (lastError) {
       _databaseState.error('Error eliminando imagen: ' + lastError.toString());
     }
+    notifyListeners();
   }
 
   //delete data of database
@@ -139,15 +180,16 @@ class DatabaseProvider with ChangeNotifier {
         _databaseRef.child(event.snapshot.key).remove();
       });
       await Future.delayed(Duration(milliseconds: 6000));
-
-      _databaseState.loaded();
     } catch (lastError) {
-      _databaseState.error('Error eliminando imagen: ' + lastError.toString());
+      _databaseState.error('Error eliminando datos: ' + lastError.toString());
     }
+    notifyListeners();
   }
 
   //load image to storage
   Future<String> loadImageStorage(File productImage) async {
+    _databaseState.loading();
+    notifyListeners();
     String url;
 
     final StorageUploadTask uploadTask = _imageRef
@@ -196,7 +238,7 @@ class DatabaseProvider with ChangeNotifier {
     }
   }
 
-  //update data of db
+  //update data of DB
   Future<void> updateDataDb(String _newUrl, String _oldUrl, String _name,
       String _price, String _unit, String _category) async {
     // update post (image, name, price, unit, category, date, time)
@@ -224,27 +266,23 @@ class DatabaseProvider with ChangeNotifier {
           .onChildAdded
           .listen((event) {
         _databaseRef.child(event.snapshot.key).update(data);
-        // .then((value) => value);
       });
       _databaseState.loaded();
+      await Future.delayed(Duration(milliseconds: 6000));
     } catch (lastError) {
       _databaseState
           .error('Error actualizando datos productos: ' + lastError.toString());
     }
   }
 
-  //constructor
-  DatabaseProvider() {
-    getDataOfDatabase();
-  }
-
   //get data of database
-  void getDataOfDatabase() async {
+  Future<List> getDataOfDatabase() async {
+    _databaseState.loading();
+    _productList.clear();
     try {
       await _databaseRef.once().then((DataSnapshot snapshot) {
         var keys = snapshot.value.keys;
         var data = snapshot.value;
-        _productList.clear();
 
         for (var individualKey in keys) {
           Product products = Product(
@@ -256,13 +294,47 @@ class DatabaseProvider with ChangeNotifier {
 
           _productList.add(products);
         }
-        _productList.length;
       });
+      _productList.length;
+      _databaseState.loaded();
     } catch (lastError) {
-      _databaseState
-          .error('Error actualizando datos productos: ' + lastError.toString());
+      _databaseState.error('Error buscando datos: ' + lastError.toString());
     }
 
     notifyListeners();
+    return _productList;
+  }
+
+  Future<List> getProductListVertical(String category) async {
+    _databaseState.loading();
+    _productListVertical.clear();
+
+    Query filterQuery = _databaseRef.orderByChild('category').equalTo(category);
+
+    try {
+      await filterQuery.once().then((DataSnapshot snapshot) {
+        var keys = snapshot.value.keys;
+        var data = snapshot.value;
+
+        for (var individualKey in keys) {
+          Product products = Product(
+              data[individualKey]['name'],
+              data[individualKey]['price'],
+              data[individualKey]['category'],
+              data[individualKey]['unit'],
+              data[individualKey]['image']);
+
+          _productListVertical.add(products);
+        }
+
+        _productListVertical.length;
+        _databaseState.loaded();
+      });
+    } catch (lastError) {
+      _databaseState.error('Error buscando datos: ' + lastError.toString());
+    }
+
+    notifyListeners();
+    return _productListVertical;
   }
 }
