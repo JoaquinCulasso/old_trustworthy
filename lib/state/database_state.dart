@@ -1,4 +1,8 @@
 class DatabaseState {
+  //singleton
+  DatabaseState._instance();
+  static final DatabaseState instance = DatabaseState._instance();
+
   bool _isLoaded = false;
   bool get isLoaded => _isLoaded;
 
