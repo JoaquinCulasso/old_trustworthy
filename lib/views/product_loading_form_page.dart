@@ -24,8 +24,6 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
 
   @override
   Widget build(BuildContext context) {
-    final databaseProvider = Provider.of<DatabaseProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Cargar producto"),
@@ -43,7 +41,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
             child: Center(
               child: productImage == null
                   ? Text("Selecciona una imagen del telefono")
-                  : enableUpload(databaseProvider, context),
+                  : enableUpload(context),
             ),
           ),
         )),
@@ -63,7 +61,7 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
     });
   }
 
-  Widget enableUpload(DatabaseProvider databaseProvider, BuildContext context) {
+  Widget enableUpload(BuildContext context) {
     var _categoryList = [
       'Carnes',
       'Congelados',
@@ -174,25 +172,24 @@ class _ProductLoadingFormPageState extends State<ProductLoadingFormPage> {
                 },
               ),
               SizedBox(height: 15.0),
-              databaseProvider.databaseState.isLoading
-                  ? Center(child: CircularProgressIndicator())
-                  : RaisedButton(
-                      elevation: 10.0,
-                      padding: EdgeInsets.all(12),
-                      child: Text(
-                        "Agregar Producto",
-                        style: TextStyle(fontSize: 25),
-                        textAlign: TextAlign.center,
-                      ),
-                      textColor: Colors.white,
-                      color: Color.fromRGBO(47, 87, 44, 1.0),
-                      onPressed: () {
-                        if (validateAndSave()) {
-                          databaseProvider.loadProduct(productImage, _name,
-                              _price, _unit, _category, context);
-                        }
-                      }, //uploadStatusImage,
-                    ),
+              RaisedButton(
+                elevation: 10.0,
+                padding: EdgeInsets.all(12),
+                child: Text(
+                  "Agregar Producto",
+                  style: TextStyle(fontSize: 25),
+                  textAlign: TextAlign.center,
+                ),
+                textColor: Colors.white,
+                color: Color.fromRGBO(47, 87, 44, 1.0),
+                onPressed: () {
+                  if (validateAndSave()) {
+                    Provider.of<DatabaseProvider>(context, listen: false)
+                        .loadProduct(productImage, _name, _price, _unit,
+                            _category, context);
+                  }
+                }, //uploadStatusImage,
+              ),
             ],
           ),
         ),
