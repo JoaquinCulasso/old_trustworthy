@@ -159,7 +159,7 @@ class Item extends StatelessWidget {
           ),
         ),
         Divider(
-            color: Colors.greenAccent[300],
+            color: Colors.grey[150],
             thickness: 2.5,
             height: 10.0,
             indent: 15,

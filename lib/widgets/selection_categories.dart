@@ -17,7 +17,7 @@ class _SelectionCategoriesState extends State<SelectionCategories> {
         Provider.of<CategoryProvider>(context, listen: false);
 
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10, bottom: 0),
       child: Column(
         children: <Widget>[
           Row(
@@ -48,6 +48,13 @@ class _SelectionCategoriesState extends State<SelectionCategories> {
               _buttonAction(
                   'Almacen', OldTrustworthyIcons.verduras, categoryProvider),
             ],
+          ),
+          Divider(
+            color: Colors.grey[150],
+            thickness: 5.0,
+            height: 30.0,
+            // indent: 15,
+            // endIndent: 15,
           ),
         ],
       ),

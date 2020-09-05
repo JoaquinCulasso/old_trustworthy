@@ -69,28 +69,28 @@ class MyHomePage extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        // Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Verduras'),
         ProductListHorizontal(category: 'Verduras'), //Verduras
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Frutas'),
         ProductListHorizontal(category: 'Frutas'), //Frutas
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Lacteos fiambres'),
         ProductListHorizontal(category: 'Lacteos fiambres'), // Lacteos Fiambres
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Carnes'),
         ProductListHorizontal(category: 'Carnes'), //Carnes
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Congelados'),
         ProductListHorizontal(category: 'Congelados'), //Congelados
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Higiene personal'),
         ProductListHorizontal(category: 'Higiene personal'), //Higiene personal
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Limpieza'),
         ProductListHorizontal(category: 'Limpieza'), //Limpieza
-        Divider(color: Colors.black, thickness: 5.0, height: 0.0),
+        Divider(color: Colors.grey[150], thickness: 5.0, height: 0.0),
         ProductTitle(title: 'Almacen'),
         ProductListHorizontal(category: 'Almacen'), //Fiambres
       ],
