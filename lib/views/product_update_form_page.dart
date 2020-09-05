@@ -92,7 +92,14 @@ class _EnableUploadState extends State<EnableUpload> {
       'Higiene personal',
       'Almacen',
     ];
-    var _unitList = ['KG', '100gr', 'Unidad'];
+    var _unitList = [
+      'KG',
+      '750gr',
+      '500gr',
+      '250gr',
+      '100gr',
+      'Unidad',
+    ];
 
     return SingleChildScrollView(
         child: Container(
