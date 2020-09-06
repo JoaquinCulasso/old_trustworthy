@@ -18,6 +18,7 @@ class ShoppingCartProvider with ChangeNotifier {
 
   void resetCounter() {
     _count = 0;
+    notifyListeners();
   }
 
   List<Product> get getCart => _cart;
