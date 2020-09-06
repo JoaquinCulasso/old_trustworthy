@@ -8,13 +8,22 @@ import 'package:old_trustworthy/widgets/send_cart_order.dart';
 class MyProductsCartPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final ShoppingCartProvider shoppingCart =
-        Provider.of<ShoppingCartProvider>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: Text('Mi Carrito'),
         centerTitle: true,
+        actions: [
+          IconButton(
+              icon: Icon(
+                Icons.remove_shopping_cart,
+                color: Colors.white,
+                size: 30,
+              ),
+              onPressed: () {
+                context.read<ShoppingCartProvider>().getCart.clear();
+                context.read<ShoppingCartProvider>().resetCounter();
+              })
+        ],
       ),
       body: SafeArea(
         child: Container(
@@ -24,7 +33,7 @@ class MyProductsCartPage extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-          child: shoppingCart.getCart.length == 0
+          child: context.watch<ShoppingCartProvider>().getCart.length == 0
               ? Center(
                   child: Padding(
                   padding: const EdgeInsets.all(1.0),
@@ -38,10 +47,14 @@ class MyProductsCartPage extends StatelessWidget {
                   ),
                 ))
               : ListView.builder(
-                  itemCount: shoppingCart.getCart.length,
+                  itemCount: context.select(
+                      (ShoppingCartProvider shoppingCart) =>
+                          shoppingCart.getCart.length),
                   itemBuilder: (BuildContext context, int index) {
-                    return _itemProduct(
-                        shoppingCart.getCart[index], shoppingCart);
+                    return ItemProduct(
+                      product:
+                          context.read<ShoppingCartProvider>().getCart[index],
+                    );
                   },
                 ),
         ),
@@ -49,8 +62,14 @@ class MyProductsCartPage extends StatelessWidget {
       bottomNavigationBar: SendCartOrder(),
     );
   }
+}
 
-  Widget _itemProduct(Product product, ShoppingCartProvider shoppingCart) {
+class ItemProduct extends StatelessWidget {
+  final Product product;
+
+  const ItemProduct({Key key, this.product}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
         Padding(
@@ -78,7 +97,7 @@ class MyProductsCartPage extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    _accountingBar(product, shoppingCart),
+                    AccountingBar(product: product)
                   ],
                 ),
               ),
@@ -107,8 +126,14 @@ class MyProductsCartPage extends StatelessWidget {
       ],
     );
   }
+}
 
-  Widget _accountingBar(Product product, ShoppingCartProvider shoppingCart) {
+class AccountingBar extends StatelessWidget {
+  final Product product;
+
+  const AccountingBar({Key key, this.product}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16.0),
       child: Container(
@@ -131,15 +156,20 @@ class MyProductsCartPage extends StatelessWidget {
                 color: Colors.white,
                 icon: Icon(Icons.add),
                 onPressed: () {
-                  shoppingCart.sumCounter(product.price);
-                  shoppingCart.incrementCountProduct(product);
+                  context
+                      .read<ShoppingCartProvider>()
+                      .sumCounter(product.price);
+                  context
+                      .read<ShoppingCartProvider>()
+                      .incrementCountProduct(product);
                 },
               ),
               VerticalDivider(color: Colors.black, width: 2.0, thickness: 2.0),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 12),
                 child: Text(
-                  shoppingCart.getProductCount(product).toString(),
+                  context.select((ShoppingCartProvider shoppingCart) =>
+                      shoppingCart.getProductCount(product).toString()),
                   style: TextStyle(fontSize: 30, color: Colors.white),
                 ),
               ),
@@ -152,8 +182,12 @@ class MyProductsCartPage extends StatelessWidget {
                 color: Colors.white,
                 icon: Icon(Icons.remove),
                 onPressed: () {
-                  shoppingCart.subtracCounter(product.price);
-                  shoppingCart.subtractCountProduct(product);
+                  context
+                      .read<ShoppingCartProvider>()
+                      .subtracCounter(product.price);
+                  context
+                      .read<ShoppingCartProvider>()
+                      .subtractCountProduct(product);
                 },
               ),
             ],
@@ -163,56 +197,3 @@ class MyProductsCartPage extends StatelessWidget {
     );
   }
 }
-
-// class MyProductsCartPage extends StatefulWidget {
-//   @override
-//   _MyProductsCartPageState createState() => _MyProductsCartPageState();
-// }
-
-// class _MyProductsCartPageState extends State<MyProductsCartPage> {
-//   ShoppingCartStream streamShoppingCart;
-
-//   @override
-//   void initState() {
-//     streamShoppingCart = ShoppingCartStream.instance;
-
-//     super.initState();
-//   }
-
-//   @override
-//   void dispose() {
-//     // streamCartProduct.close();
-//     streamShoppingCart.close();
-//     super.dispose();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text('Carrito de productos a comprar'),
-//       ),
-//       body: StreamBuilder<Product>(
-//           // stream: streamCartProduct.streamProduct,
-//           stream: streamShoppingCart.streamAddProductCart,
-//           builder: (context, snapshot) {
-//             if (!snapshot.hasData) {
-//               return Center(
-//                 heightFactor: 20.0,
-//                 child: CircularProgressIndicator(),
-//               );
-//             }
-//             return Text('OK');
-//             // return _itemProduct(snapshot.data);
-//             // _itemProduct(),
-//             // Divider(color: Colors.black, thickness: 5.0, height: 50.0),
-//             // _itemProduct(),
-//             // Divider(color: Colors.black, thickness: 5.0, height: 50.0),
-//             // _itemProduct(),
-//             // Divider(color: Colors.black, thickness: 5.0, height: 50.0),
-//             // _itemProduct(),
-//             // Divider(color: Colors.black, thickness: 5.0, height: 50.0),
-//             // _itemProduct(),
-//           }),
-//     );
-//   }
