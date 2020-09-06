@@ -20,8 +20,7 @@ class MyProductsCartPage extends StatelessWidget {
                 size: 30,
               ),
               onPressed: () {
-                context.read<ShoppingCartProvider>().getCart.clear();
-                context.read<ShoppingCartProvider>().resetCounter();
+                _clearShoppingCart(context);
               })
         ],
       ),
@@ -62,6 +61,37 @@ class MyProductsCartPage extends StatelessWidget {
       bottomNavigationBar: SendCartOrder(),
     );
   }
+}
+
+Future<void> _clearShoppingCart(context) {
+  final shoppingCartProvider =
+      Provider.of<ShoppingCartProvider>(context, listen: false);
+  return showDialog(
+      context: context,
+      builder: (_) {
+        return AlertDialog(
+          title: Text('Alerta!!!', style: TextStyle(fontSize: 25)),
+          content: Text('¿Estas seguro de eliminar todos los productos?'),
+          actions: <Widget>[
+            RaisedButton(
+              color: Color.fromRGBO(47, 87, 44, 1.0),
+              child: Text('Aceptar', style: TextStyle(fontSize: 20)),
+              onPressed: () {
+                shoppingCartProvider.getCart.clear();
+                shoppingCartProvider.resetCounter();
+                Navigator.of(context).pop();
+              },
+            ),
+            RaisedButton(
+              color: Color.fromRGBO(47, 87, 44, 1.0),
+              child: Text('Cancelar', style: TextStyle(fontSize: 20)),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      });
 }
 
 class ItemProduct extends StatelessWidget {
