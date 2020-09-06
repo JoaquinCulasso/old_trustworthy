@@ -8,6 +8,8 @@ import 'package:old_trustworthy/providers/login_provider.dart';
 import 'package:old_trustworthy/providers/shopping_cart_provider.dart';
 import 'package:old_trustworthy/providers/database_provider.dart';
 
+import 'package:old_trustworthy/configs/preference.dart';
+
 import 'package:old_trustworthy/views/home_page.dart';
 import 'package:old_trustworthy/views/account_page.dart';
 import 'package:old_trustworthy/views/address_page.dart';
@@ -19,7 +21,18 @@ import 'package:old_trustworthy/views/product_loading_form_page.dart';
 void main() => runApp(MyApp());
 
 @override
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    SharedPreferensesManager.init();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -28,22 +41,7 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(create: (context) => LoginProvider()),
           ChangeNotifierProvider(create: (context) => CategoryProvider()),
           ChangeNotifierProvider(create: (context) => DatabaseProvider()),
-          // ChangeNotifierProvider(
-          //   create: (context) => LoginProvider(),
-          //   builder: (BuildContext context, Widget child) {
-          //     print('123123');
-          //     return Selector<LoginProvider, bool>(
-          //         selector: (_, LoginProvider loginProvider) =>
-          //             loginProvider.isLoggedIn,
-          //         builder: (BuildContext context, bool isLoggedIn, _) {
-          //           return child;
-          //         });
-          //   },
-          // ),
         ],
-
-        // create: (context) => ShoppingCartProvider(),
-
         child: MaterialApp(
           theme: ThemeData.from(
             colorScheme: ColorScheme(
