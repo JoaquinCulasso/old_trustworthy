@@ -10,8 +10,6 @@ import 'package:old_trustworthy/state/login_state.dart';
 class LoginProvider with ChangeNotifier {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  // GoogleSignInAccount _googleUser;
-  // GoogleSignInAuthentication _googleAuth;
 
   final LoginState _loginState = LoginState.intance; //singleton
   final Account _account = Account.instance; //singleton
