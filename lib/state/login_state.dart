@@ -1,7 +1,9 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:old_trustworthy/configs/preference.dart';
 
 class LoginState {
-  SharedPreferences _preferences;
+  //singleton
+  LoginState._instance();
+  static final LoginState intance = LoginState._instance();
 
   bool _isLoggedIn = false;
   bool get isLoggedIn => _isLoggedIn;
@@ -25,39 +27,29 @@ class LoginState {
     _hasError = false;
     _isLoading = false;
     _isLoggedIn = true;
-    _preferences.setBool('isLoggedIn', true);
+    SharedPreferensesManager.setBool('isLoggedIn', true);
   }
 
   void logout() {
     _hasError = false;
     _isLoading = false;
     _isLoggedIn = false;
-    _preferences.clear();
+    SharedPreferensesManager.clear();
   }
 
   void error(lastError) {
     _hasError = true;
     _isLoading = false;
     _isLoggedIn = false;
-    _lastError = lastError.toString();
+    _lastError = lastError;
   }
 
-  void isSignedIn(user) async {
-    _preferences = await SharedPreferences.getInstance();
-    if (_preferences.containsKey('isLoggedIn')) {
+  void isSignedIn(user) {
+    if (SharedPreferensesManager.getBool('isLoggedIn')) {
       _isLoading = false;
       _isLoggedIn = user != null;
     } else {
       _isLoading = false;
     }
-  }
-
-  @override
-  String toString() {
-    return '''LoginState{
-      _isLoggedIn: $_isLoggedIn,
-      _isLoading: $_isLoading,
-      _hasError: $_hasError,
-    }''';
   }
 }
